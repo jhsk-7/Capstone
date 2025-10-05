@@ -5,11 +5,11 @@ export function middleware(request) {
   const token = request.cookies.get("token")?.value || "";
 
   // public pages anyone can visit
-  const PUBLIC_PATHS = new Set(["/login", "/signup"]);
+  const PUBLIC_PATHS = new Set(["/user/auth/login", "/user/auth/signup"]);
   const isPublic = PUBLIC_PATHS.has(pathname);
 
   // any route that should require login
-  const PROTECTED_PREFIXES = ["/myBikes", "/addBike", "/appointment"];
+  const PROTECTED_PREFIXES = ["/user/myBikes", "/user/addBike", "/user/appointment"];
   const needsAuth = PROTECTED_PREFIXES.some((p) =>
     pathname === p || pathname.startsWith(`${p}/`)
   );
@@ -21,7 +21,7 @@ export function middleware(request) {
 
   // not logged in -> block protected areas
   if (needsAuth && !token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/user/auth/login", request.url));
   }
 
   // otherwise allow
@@ -33,11 +33,11 @@ export const config = {
   matcher: [
     "/profile",
     "/profile/:path*",   // nested routes
-    "/bikes/:path*",
-    "/myBikes",
-    "/appointment/:path*",
-    "/login",
-    "/signup",
-    "/addBike"
+    "/user/bikes/:path*",
+    "/user/myBikes",
+    "/user/appointment/:path*",
+    "/user/auth/login",
+    "/user/auth/signup",
+    "/user/addBike"
   ],
 };

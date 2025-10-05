@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { connect } from "@/dbConfig/dbConfig";
 import Service from "@/models/serviceModel";
-import { requireAdmin } from "@/helpers/requireAdmin";
+import { requireAdmin } from "@/helpers/adminAuth";
 
 connect();
 

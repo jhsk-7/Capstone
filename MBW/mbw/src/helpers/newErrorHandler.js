@@ -1,12 +1,12 @@
 export function normalizeError(err) {
 
-  console.log(err.error)
+  console.log(err)
 
   let status;
   let message;
 
-  const statusRaw  = err.response.status;
-  const dataRaw = err.response.data.error;
+  const statusRaw  = err.response.status || null;
+  const dataRaw = err.response.data.error || err.stack;
 
 
   if(dataRaw === "User already exists"){
