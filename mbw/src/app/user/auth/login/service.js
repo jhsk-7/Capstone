@@ -11,7 +11,7 @@
       router.push("/user/myBikes");
     } catch (err) {
       const findStatus = async () => {
-        const { status, message} = normalizeError(err);
+        const { message} = normalizeError(err);
         setErrMsg(message);
       };
       await findStatus();

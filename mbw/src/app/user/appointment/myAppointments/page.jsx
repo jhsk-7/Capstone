@@ -34,7 +34,7 @@ export default function MyAppointmentsPage() {
       setAppointments(res.data.appointments || []);
     } catch (err) {
       const findStatus = async () => {
-        const { status, message} = normalizeError(err);
+        const { message} = normalizeError(err);
         setError(message);
       };
       await findStatus();

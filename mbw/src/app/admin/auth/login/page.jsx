@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { normalizeError } from "@/helpers/newErrorHandler";
+import { useAppContext } from "@/app/appContext";
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function AdminLogin() {
     email: "",
     password: "",
   });
+  const { setIsAdminLoggedIn, isDarkMode } = useAppContext(); 
   const [errMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(true);
@@ -30,12 +32,13 @@ export default function AdminLogin() {
       const res = await axios.post("/api/admin/adminAuth/login", user, {
         withCredentials: true,
       });
+      setIsAdminLoggedIn(true)
       alert(res.data.message);
       router.push("/admin/services"); 
     } catch (err) {
       console.log(err)
       const findStatus = async () => {
-        const { status, message} = normalizeError(err);
+        const { message } = normalizeError(err);
         setErrMsg(message);
       };
       await findStatus();

@@ -25,7 +25,7 @@ export default function AppointmentPage() {
     const fetchUserAndBikes = async () => {
       try {
         // User
-        const userRes = await axios.get("/api/users/userAuth/myProfile", { withCredentials: true });
+        const userRes = await axios.get("/api/users/userAuth/validUser", { withCredentials: true });
         const user = userRes.data.data;
         setUserId(user._id);
 

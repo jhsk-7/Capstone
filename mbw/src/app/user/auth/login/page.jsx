@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { normalizeError} from "@/helpers/newErrorHandler";
@@ -11,7 +11,7 @@ import { useAppContext } from "@/app/appContext";
 export default function LoginPage() {
   const router = useRouter();
 
-  const { isLoggedIn, setIsLoggedIn, isDarkMode } = useAppContext(); 
+  const { setIsLoggedIn, isDarkMode } = useAppContext(); 
   const [user, setUser] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
@@ -27,7 +27,6 @@ export default function LoginPage() {
       setLoading(true);
       const res = await axios.post("/api/users/userAuth/login", user, { withCredentials: true });
       setIsLoggedIn(true)
-      console.log(isLoggedIn)
       router.push("/user/myBikes");
     } catch (err) {
       const findStatus = async () => {
