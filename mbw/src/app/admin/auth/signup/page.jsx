@@ -12,12 +12,7 @@ export default function AdminSignup() {
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
-  const isDisabled = loading || !user.email || !user.username || !user.password;
-
-  useEffect(() => {
-    setButtonDisabled(!(user.emailOrUsername && user.password));
-  }, [user]);
-
+  const isDisabled = loading || !user.email || !user.username || !user.password || !user.secretCode;
 
   const onSignup = async (e) => {
     e?.preventDefault();

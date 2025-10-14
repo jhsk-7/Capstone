@@ -6,23 +6,21 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useAppContext } from "@/app/appContext";
 
-export default function NavbarOut() {
+export default function NavbarHome() {
   const pathname = usePathname();
   const router = useRouter();
-  const { isLoggedIn, setIsLoggedIn, setIsHome, isDarkMode, setIsDarkMode } = useAppContext(); 
+  const { isLoggedIn, setIsLoggedIn, isDarkMode, setIsDarkMode } = useAppContext();
+  
 
   const navItems = [
-    { href: "/", label: "Home" },
+    { href: "/user/auth/login", label: "Login" },
+    { href: "/user/auth/signup", label: "Sign Up" }
   ];
 
   // --- Settings dropdown state ---
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
   const btnRef = useRef(null);
-
-  useEffect(() => {
-    setIsHome(false)
-  }, []);
 
   useEffect(() => {
     function onDocClick(e) {

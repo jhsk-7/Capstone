@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { connect } from "@/dbConfig/dbConfig";
 import Appointment from "@/models/appointmentModel";
+import "@/models/bikeModel"; 
+import "@/models/serviceModel"; 
 import { getDataFromToken } from "@/helpers/userAuth";
 
 

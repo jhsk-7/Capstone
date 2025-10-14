@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { normalizeError} from "@/helpers/newErrorHandler";
@@ -11,12 +11,16 @@ import { useAppContext } from "@/app/appContext";
 export default function LoginPage() {
   const router = useRouter();
 
-  const { setIsLoggedIn, isDarkMode } = useAppContext(); 
+  const { setIsLoggedIn, setIsHome, isDarkMode } = useAppContext(); 
   const [user, setUser] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
   const isDisabled = loading || !user.email || !user.password;
+
+  useEffect(() => {
+    setIsHome(false);
+  }, []);
 
   const onLogin = async (e) => {
     e?.preventDefault();

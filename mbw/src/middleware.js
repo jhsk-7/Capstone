@@ -16,7 +16,7 @@ export function middleware(request) {
 
   // already logged in -> block login/signup
   if (isPublic && token) {
-    return NextResponse.redirect(new URL("/profile", request.url));
+    return NextResponse.redirect(new URL("/user/myBikes", request.url));
   }
 
   // not logged in -> block protected areas
@@ -31,8 +31,6 @@ export function middleware(request) {
 export const config = {
   // Run middleware on all routes you want to guard (supports globs)
   matcher: [
-    "/profile",
-    "/profile/:path*",   // nested routes
     "/user/bikes/:path*",
     "/user/myBikes",
     "/user/appointment/:path*",

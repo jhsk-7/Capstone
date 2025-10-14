@@ -1,19 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { normalizeError} from "@/helpers/newErrorHandler";
+import { useAppContext } from "@/app/appContext";
+
 
 export default function SignupPage() {
   const router = useRouter();
 
+  const { setIsHome, isDarkMode } = useAppContext(); 
   const [user, setUser] = useState({ email: "", username: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
   const isDisabled = loading || !user.email || !user.username || !user.password;
+
+  useEffect(() => {
+    setIsHome(false);
+  }, []);
 
   const onSignup = async (e) => {
     e?.preventDefault();

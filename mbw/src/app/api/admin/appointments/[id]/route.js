@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { connect } from "@/dbConfig/dbConfig";
 import Appointment from "@/models/appointmentModel";
+import "@/models/userModel";
+import "@/models/bikeModel";   
+import "@/models/serviceModel"; 
 import { getDataFromToken } from "@/helpers/userAuth";
 import mongoose from "mongoose";
 
@@ -8,24 +11,18 @@ connect();
 
 export async function GET(request, context) {
   try {
-    const userId = await getDataFromToken(request);
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     const { id } = await context.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid appointment id" }, { status: 400 });
     }
 
-    // Single query: verify ownership AND populate the fields you need
     const appt = await Appointment.findOne({
-      userId: userId,
+      _id: id,
     })
+      .populate({path: "userId", select: "username"})
       .populate({ path: "bikes.bikeId", select: "nickname" }) 
       .populate({ path: "bikes.services", select: "name" })   
-      .select("_id status notes date bikes createdAt updatedAt user userId")
       .lean();
 
     if (!appt) {

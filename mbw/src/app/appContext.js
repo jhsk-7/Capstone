@@ -9,8 +9,9 @@ export default AppContext;
 export function AppProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [isHome, setIsHome] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true)
-  const value = { isLoggedIn, setIsLoggedIn, isAdminLoggedIn, setIsAdminLoggedIn, isDarkMode, setIsDarkMode };
+  const value = { isLoggedIn, setIsLoggedIn, isAdminLoggedIn, setIsAdminLoggedIn, isHome, setIsHome, isDarkMode, setIsDarkMode };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }
 
