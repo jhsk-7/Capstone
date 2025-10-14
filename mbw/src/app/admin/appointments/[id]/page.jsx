@@ -25,10 +25,15 @@ function formatDate(input) {
 }
 
 export default function AppointmentDetailPage() {
+  // Status update handler
+
+
   const { id } = useParams();
   const [appt, setAppt] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [updating, setUpdating] = useState(false);
+
 
   useEffect(() => {
     if (!id) return;
@@ -50,6 +55,21 @@ export default function AppointmentDetailPage() {
     };
     fetchOne();
   }, [id]);
+
+  const handleStatusUpdate = async (status) => {
+    if (!id) return;
+    setUpdating(true);
+    setError("");
+    try {
+      await axios.patch(`/api/admin/appointments/${id}`, { status }, { withCredentials: true });
+      setAppt((prev) => ({ ...prev, status }));
+    } catch (err) {
+      const { message } = normalizeError(err);
+      setError(message);
+    } finally {
+      setUpdating(false);
+    }
+  };
 
   const dateLabel = appt?.date ? formatDate(appt.date) : "";
 
@@ -133,6 +153,7 @@ export default function AppointmentDetailPage() {
         <div className="border p-4 rounded">
           {/* Top row: date + status pill */}
           <div className="flex items-center gap-2 mb-2">
+
             <span className="text-base font-medium">{dateLabel}</span>
             <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-700">
               {appt.status || "Pending"}
@@ -181,6 +202,27 @@ export default function AppointmentDetailPage() {
             )}
           </div>
         </div>
+          <button
+            className="ml-auto px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 mr-4"
+            disabled={updating || appt.status === "Confirmed"}
+            onClick={() => handleStatusUpdate("Confirmed")}
+          >
+            Confirmed
+          </button>
+          <button
+            className="ml-auto px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 mr-4"
+            disabled={updating || appt.status === "Completed"}
+            onClick={() => handleStatusUpdate("Completed")}
+          >
+            Completed
+          </button>
+          <button
+            className="ml-auto px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
+            disabled={updating || appt.status === "Cancelled"}
+            onClick={() => handleStatusUpdate("Cancelled")}
+          >
+            Cancelled
+          </button>
       </div>
     </div>
   );

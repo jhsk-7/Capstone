@@ -1,3 +1,4 @@
+
 import { NextResponse } from "next/server";
 import { connect } from "@/dbConfig/dbConfig";
 import Appointment from "@/models/appointmentModel";
@@ -40,5 +41,31 @@ export async function GET(request, context) {
       { error: error?.message || "Server error" },
       { status: 500 }
     );
+  }
+}
+
+
+export async function PATCH(request, context) {
+  try {
+    const { id } = context.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ error: "Invalid appointment id" }, { status: 400 });
+    }
+    const body = await request.json();
+    const { status } = body;
+    if (!status || !["Pending", "Confirmed", "Completed", "Cancelled"].includes(status)) {
+      return NextResponse.json({ error: "Invalid status value" }, { status: 400 });
+    }
+    const updated = await Appointment.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    ).lean();
+    if (!updated) {
+      return NextResponse.json({ error: "Appointment not found" }, { status: 404 });
+    }
+    return NextResponse.json({ message: "Status updated", data: updated }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: error?.message || "Server error" }, { status: 500 });
   }
 }
