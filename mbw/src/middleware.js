@@ -1,0 +1,41 @@
+import { NextResponse } from "next/server";
+
+export function middleware(request) {
+  const { pathname } = request.nextUrl;
+  const token = request.cookies.get("token")?.value || "";
+
+  // public pages anyone can visit
+  const PUBLIC_PATHS = new Set(["/user/auth/login", "/user/auth/signup"]);
+  const isPublic = PUBLIC_PATHS.has(pathname);
+
+  // any route that should require login
+  const PROTECTED_PREFIXES = ["/user/myBikes", "/user/addBike", "/user/appointment"];
+  const needsAuth = PROTECTED_PREFIXES.some((p) =>
+    pathname === p || pathname.startsWith(`${p}/`)
+  );
+
+  // already logged in -> block login/signup
+  if (isPublic && token) {
+    return NextResponse.redirect(new URL("/user/myBikes", request.url));
+  }
+
+  // not logged in -> block protected areas
+  if (needsAuth && !token) {
+    return NextResponse.redirect(new URL("/user/auth/login", request.url));
+  }
+
+  // otherwise allow
+  return NextResponse.next();
+}
+
+export const config = {
+  // Run middleware on all routes you want to guard (supports globs)
+  matcher: [
+    "/user/bikes/:path*",
+    "/user/myBikes",
+    "/user/appointment/:path*",
+    "/user/auth/login",
+    "/user/auth/signup",
+    "/user/addBike"
+  ],
+};
