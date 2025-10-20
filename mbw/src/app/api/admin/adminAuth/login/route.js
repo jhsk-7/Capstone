@@ -16,7 +16,7 @@ export async function POST(request) {
     }
 
     const admin = await Admin.findOne({
-      $or: [{ email: email }, { username: email }]
+      email: email 
     });
     if (!admin) return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
 
