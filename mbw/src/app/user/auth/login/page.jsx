@@ -1,4 +1,4 @@
-// /src/app/login
+// /src/app/user/auth/login
 "use client";
 
 import Link from "next/link";
@@ -34,7 +34,7 @@ export default function LoginPage() {
       router.push("/user/myBikes");
     } catch (err) {
       const findStatus = async () => {
-        const { status, message} = normalizeError(err);
+        const { message} = normalizeError(err);
         setErrMsg(message);
       };
       await findStatus();

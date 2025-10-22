@@ -2,10 +2,9 @@ export function normalizeError(err) {
 
   console.log(err)
 
-  let message;
 
-  const dataRaw = 'j'
-
+  const message = err.response?.data.error || err.message || "An unknown error occurred";
+/*
   if(dataRaw === "User already exists"){
     message = dataRaw;
   }
@@ -31,7 +30,7 @@ export function normalizeError(err) {
   }
 
   console.log(`${message}`)
-
+*/
   return { message }
 }
 
