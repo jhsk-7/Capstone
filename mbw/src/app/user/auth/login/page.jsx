@@ -45,9 +45,9 @@ export default function LoginPage() {
   };
   
   return (
-    <div className={`"min-h-[calc(100vh-4rem)] p-6" ${isDarkMode ? null : "bg-white"}`}>
+    <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
     <div className="p-6 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Log in</h1>
+      <h1 className={`text-2xl font-bold mb-4 ${isDarkMode ? null : "text-black"}`}>Log in</h1>
 
       {errMsg && (
         <div className="mb-4 p-4 border border-red-300 bg-red-50 rounded text-red-700">
@@ -57,7 +57,7 @@ export default function LoginPage() {
 
       <form onSubmit={onLogin} className="space-y-4">
         <div>
-          <label htmlFor="email" className="block mb-2">
+          <label htmlFor="email" className={`block mb-2 ${isDarkMode ? null : "text-black"}`}>
             Email
           </label>
           <input
@@ -66,14 +66,14 @@ export default function LoginPage() {
             value={user.email}
             onChange={(e) => setUser((u) => ({ ...u, email: e.target.value }))}
             placeholder="you@example.com"
-            className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDarkMode ? "placeholder:text-shadow-white" : "text-black"}`}
             required
             autoComplete="email"
           />
         </div>
 
         <div>
-          <label htmlFor="password" className="block mb-2">
+          <label htmlFor="password" className={`block mb-2 ${isDarkMode ? null : "text-black"}`}>
             Password
           </label>
           <input
@@ -82,7 +82,7 @@ export default function LoginPage() {
             value={user.password}
             onChange={(e) => setUser((u) => ({ ...u, password: e.target.value }))}
             placeholder="••••••••"
-            className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDarkMode ? "placeholder:text-shadow-white" : "text-black"}`}
             required
             autoComplete="current-password"
           />
@@ -91,13 +91,13 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isDisabled}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-blue-600  px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white"
         >
           {loading ? "Signing in…" : "Login"}
         </button>
       </form>
 
-      <div className="mt-4 text-sm text-gray-700">
+      <div className={`mt-4 text-sm ${isDarkMode ? null : "text-black"}`}>
         <span className="mr-2">Don’t have an account?</span>
         <Link href="/user/auth/signup" className="text-blue-600 hover:underline">
           Sign up

@@ -3,8 +3,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
+import { useAppContext } from "@/app/appContext";
 
 export default function AppointmentPage() {
+  const { isDarkMode } = useAppContext();   
   const [userId, setUserId] = useState("");
   const [bikes, setBikes] = useState([]);
   const [services, setServices] = useState([]); // [{ _id, name, ... }]

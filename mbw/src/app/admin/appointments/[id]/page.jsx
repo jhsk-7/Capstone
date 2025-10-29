@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
+import { useAppContext } from "@/app/appContext";
 import { normalizeError } from "@/helpers/newErrorHandler";
 
 // Small date formatter to match your list pages
@@ -27,7 +28,7 @@ function formatDate(input) {
 export default function AppointmentDetailPage() {
   // Status update handler
 
-
+  const { isDarkMode } = useAppContext(); 
   const { id } = useParams();
   const [appt, setAppt] = useState(null);
   const [loading, setLoading] = useState(true);

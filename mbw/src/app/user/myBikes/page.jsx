@@ -5,9 +5,10 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { normalizeError } from "@/helpers/newErrorHandler";
-import { fetchBikes } from "./service";
+import { useAppContext } from "@/app/appContext";
 
 export default function BikesPage() {
+  const { isDarkMode } = useAppContext();   
   const [bikes, setBikes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -34,6 +35,7 @@ export default function BikesPage() {
   // --- Loading skeletons ---
   if (loading) {
     return (
+      <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>     
       <div className="p-6 max-w-xl mx-auto">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold">My Bikes</h1>
@@ -51,6 +53,7 @@ export default function BikesPage() {
             </div>
           ))}
         </div>
+      </div>
       </div>
     );
   }
@@ -78,8 +81,9 @@ export default function BikesPage() {
   // --- Empty state ---
   if (bikes.length === 0) {
     return (
+      <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
       <div className="p-6 max-w-xl mx-auto">
-        <div className="flex items-center justify-between mb-4">
+        <div className={`flex items-center justify-between mb-4 ${isDarkMode? null : "text-gray-900"}`}>
           <h1 className="text-2xl font-bold">My Bikes</h1>
           <Link
             href="/user/addBike"
@@ -88,9 +92,9 @@ export default function BikesPage() {
             Add Bike
           </Link>
         </div>
-        <div className="border p-4 rounded">
-          <p className="text-gray-700">No bikes found.</p>
-          <p className="text-sm text-gray-600 mt-1">
+        <div className={`border p-4 rounded ${isDarkMode ? null : "border-gray-900"}`}>
+          <p className={`${isDarkMode? null : "text-gray-900"}`}>No bikes found.</p>
+          <p className={`mt-1 ${isDarkMode? null : "text-gray-900"}`}>
             Add your first bike to start booking services.
           </p>
           <Link
@@ -101,11 +105,13 @@ export default function BikesPage() {
           </Link>
         </div>
       </div>
+      </div>
     );
   }
 
   // --- List ---
   return (
+    <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
     <div className="p-6 max-w-xl mx-auto">
       <div className="fixed left-4 top-24 z-40">
         <Link
@@ -117,8 +123,10 @@ export default function BikesPage() {
       </div>
 
       <div>
+        <div className={`${isDarkMode? null : "text-gray-900"}`}>
         <h1 className="text-2xl font-bold mb-4">My Bikes</h1>
-        <p className="text-sm text-gray-500 mb-4">View your bikes collection.</p>
+        <p className="mb-4">View your bikes collection.</p>
+        </div>
       </div>
 
       <div className="space-y-4">
@@ -132,14 +140,14 @@ export default function BikesPage() {
             <div
               key={id}
               onClick={() => router.push(`/user/myBikes/${id}`)}
-              className="border p-4 rounded flex items-center gap-4 cursor-pointer hover:bg-blue-600"
+              className={`border p-4 rounded flex items-center gap-4 cursor-pointer hover:bg-blue-600 ${isDarkMode ? null : "border-gray-900"}`}
             >
               {/* Image / placeholder */}
               {bike.picture ? (
                 <img
                   src={bike.picture}
                   alt={bike.nickname || "Bike"}
-                  className="w-24 h-24 object-cover rounded"
+                  className="w-24 h-24 object-cover rounded border border-gray-900"
                 />
               ) : (
                 <div className="w-24 h-24 rounded bg-gray-100 flex items-center justify-center">
@@ -159,20 +167,23 @@ export default function BikesPage() {
 
               {/* Details */}
               <div>
-                <h2 className="text-lg font-semibold">{bike.nickname || "My Bike"}</h2>
+                <h2 className={`text-lg font-semibold ${isDarkMode ? null : "text-gray-900"}`}>
+                  {bike.nickname || "My Bike"}
+                </h2>
                 {(bike.brand || bike.make || bike.model) && (
-                  <p className="text-sm text-gray-700">
+                  <p className={`${isDarkMode ? null : "text-gray-900"}`}>
                     {(bike.brand || bike.make) ?? ""} {bike.model ?? ""}
                   </p>
                 )}
                 {bike.color && (
-                  <p className="text-sm text-gray-700">Color: {bike.color}</p>
+                  <p className={`${isDarkMode ? null : "text-gray-900"}`}>Color: {bike.color}</p>
                 )}
               </div>
             </div>
           );
         })}
       </div>
+    </div>
     </div>
   );
 }

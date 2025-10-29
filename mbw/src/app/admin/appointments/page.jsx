@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation"; 
+import { useAppContext } from "@/app/appContext";
 import { normalizeError } from "@/helpers/newErrorHandler";
 
 function formatDate(d) {
@@ -19,6 +19,7 @@ function formatDate(d) {
 }
 
 export default function MyAppointmentsPage() {
+  const { isDarkMode } = useAppContext(); 
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

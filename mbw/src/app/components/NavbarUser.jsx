@@ -74,7 +74,7 @@ export default function NavbarUser() {
   };
 
   return (
-    <nav className={`shadow-md ${isDarkMode ? "bg-blue-600 text-white" : "bg-white text-gray-900"}`}>
+  <nav className={`shadow-md ${isDarkMode ? "bg-blue-600 text-white" : "bg-gray-300 text-gray-900"}`}>
       <div className="max-w-6xl mx-auto px-4">
         <div className="relative flex justify-between items-center h-16">
           <div className="text-xl font-bold">BikeShop</div>

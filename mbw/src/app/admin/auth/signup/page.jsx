@@ -4,9 +4,11 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useAppContext } from "@/app/appContext";
 import { normalizeError} from "@/helpers/newErrorHandler";
 
 export default function AdminSignup() {
+  const { isDarkMode } = useAppContext();   
   const router = useRouter();
   const [user, setUser] = useState({ email: "", username: "", password: "", secretCode: "" });
   const [loading, setLoading] = useState(false);

@@ -5,8 +5,10 @@ import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 import { normalizeError } from "@/helpers/newErrorHandler";
+import { useAppContext } from "@/app/appContext";
 
 export default function BikeDetailPage() {
+  const { isDarkMode } = useAppContext();   
   const { id } = useParams();
   const router = useRouter();
 
@@ -27,7 +29,7 @@ export default function BikeDetailPage() {
         setBike(res.data.data);
       } catch (err) {
         const findStatus = async () => {
-          const { status, message} = normalizeError(err);
+          const { message} = normalizeError(err);
           setError(message);
         };
         await findStatus();
@@ -53,12 +55,16 @@ export default function BikeDetailPage() {
   };
 
   if (loading) {
-    return <div className="p-6 max-w-xl mx-auto">Loading bike…</div>;
-  }
+    return (
+    <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
+      <div className="p-6 max-w-xl mx-auto">Loading bike…</div>;
+    </div>  
+  )}
 
 
   if (error) {
     return (
+      <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
       <div className="p-6 max-w-xl mx-auto">
         <div className="fixed left-4 top-24 z-40">
           <Link
@@ -72,22 +78,26 @@ export default function BikeDetailPage() {
           {error}
         </div>
       </div>
+      </div>
     );
   }
 
 
   if (!bike) {
     return (
+      <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
       <div className="p-6 max-w-xl mx-auto">
-        <p className="text-gray-600">Bike not found.</p>
+        <p className={`${isDarkMode ? null : "text-gray-900"}`}>Bike not found.</p>
         <Link href="/user/myBikes" className="text-blue-600 underline mt-4 block">
           Back to My Bikes
         </Link>
+      </div>
       </div>
     );
   }
 
   return (
+    <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
     <div className="p-6 max-w-xl mx-auto">
       {/* Left-side fixed back button */}
       <div className="fixed left-4 top-24 z-40">
@@ -101,17 +111,11 @@ export default function BikeDetailPage() {
 
       {/* Header + actions */}
       <div className="flex items-start justify-between gap-3 mb-4">
-        <h1 className="text-2xl font-bold">{bike.nickname || "My Bike"}</h1>
+        <h1 className={`text-2xl font-bold ${isDarkMode ? null : "text-gray-900"}`}>{bike.nickname || "My Bike"}</h1>
         <div className="flex items-center gap-2">
-          <Link
-            href={`/user/myBikes/${id}/edit`}
-            className="px-3 py-2 rounded border hover:bg-gray-800"
-          >
-            Edit
-          </Link>
           <button
             onClick={() => setShowConfirm(true)}
-            className="px-3 py-2 rounded bg-red-600 text-white hover:bg-red-700"
+            className="px-3 py-2 rounded bg-gray-200 border border-gray-900 text-gray-900 hover:bg-red-400"
           >
             Delete
           </button>
@@ -119,7 +123,7 @@ export default function BikeDetailPage() {
       </div>
 
       {/* Gentle inline warning under actions */}
-      <div className="mb-4 text-sm text-gray-400">
+      <div className={`mb-4 text-sm ${isDarkMode ? null : "text-gray-900"}`}>
         Deleting this bike will also delete any appointments where this bike is included. This action cannot be undone.
       </div>
 
@@ -129,21 +133,21 @@ export default function BikeDetailPage() {
           <img
             src={bike.picture}
             alt={bike.nickname || "Bike"}
-            className="w-full h-64 object-cover rounded"
+            className="w-full h-64 object-cover rounded border border-gray-900"
           />
         )}
-        <p className="text-gray-700">
+        <p className={`${isDarkMode ? null : "text-gray-900"}`}>
           {bike.make} {bike.model}
         </p>
-        {bike.color && <p className="text-gray-700">Color: {bike.color}</p>}
+        {bike.color && <p className={`${isDarkMode ? null : "text-gray-900"}`}>Color: {bike.color}</p>}
       </div>
 
       {/* Confirm Delete Modal */}
       {showConfirm && (
         <div className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4">
           <div className="w-full max-w-md rounded-lg bg-white p-6 shadow">
-            <h2 className="text-lg text-gray-700 font-semibold">Delete bike?</h2>
-            <p className="mt-2 text-sm text-gray-600">
+            <h2 className="text-lg text-gray-900 font-semibold">Delete bike?</h2>
+            <p className="mt-2 text-sm text-gray-900">
               You’re about to permanently delete{" "}
               <span className="font-medium">{bike.nickname || "this bike"}</span>.{" "}
               This will also delete any appointments where this bike exists. This action cannot be undone.
@@ -159,14 +163,14 @@ export default function BikeDetailPage() {
               <button
                 onClick={() => setShowConfirm(false)}
                 disabled={deleting}
-                className="px-3 py-2 rounded border border-gray-700 text-gray-700 bg-gray-100 hover:bg-white disabled:opacity-50"
+                className="px-3 py-2 rounded border border-gray-900 text-gray-900 bg-gray-100 hover:bg-white disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
                 disabled={deleting}
-                className="px-3 py-2 rounded border border-red-600 bg-red-600 text-white hover:bg-red-700 disabled:opacity-50"
+                className="px-3 py-2 rounded border border-gray-900 bg-red-400 text-gray-900 hover:bg-red-500 disabled:opacity-50"
               >
                 {deleting ? "Deleting…" : "Delete"}
               </button>
@@ -174,6 +178,7 @@ export default function BikeDetailPage() {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }

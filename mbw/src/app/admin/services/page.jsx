@@ -2,8 +2,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useAppContext } from "@/app/appContext";
 
 export default function AdminServicesPage() {
+  const { isDarkMode } = useAppContext(); 
   const [services, setServices] = useState([]);
   const [form, setForm] = useState({
     name: "",

@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
 import { normalizeError } from "@/helpers/newErrorHandler";
+import { useAppContext } from "@/app/appContext";
 
 // Small date formatter to match your list pages
 function formatDate(input) {
@@ -25,6 +26,7 @@ function formatDate(input) {
 }
 
 export default function AppointmentDetailPage() {
+  const { isDarkMode } = useAppContext();   
   const { id } = useParams();
   const [appt, setAppt] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -40,7 +42,7 @@ export default function AppointmentDetailPage() {
         setAppt(res.data?.data ?? null);
       } catch (err) {
         const findStatus = async () => {
-          const { status, message} = normalizeError(err);
+          const { message} = normalizeError(err);
           setError(message);
         };
         await findStatus();

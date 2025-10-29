@@ -5,6 +5,7 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation"; 
 import { normalizeError } from "@/helpers/newErrorHandler";
+import { useAppContext } from "@/app/appContext";
 
 function formatDate(d) {
   try {
@@ -19,6 +20,7 @@ function formatDate(d) {
 }
 
 export default function MyAppointmentsPage() {
+  const { isDarkMode } = useAppContext();   
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

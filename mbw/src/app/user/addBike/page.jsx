@@ -2,8 +2,10 @@
 
 import AddBikeForm from "./AddBikeForm";
 import Link from "next/link";
+import { useAppContext } from "@/app/appContext";
 
 export default function AddBikePage() {
+  const { isDarkMode } = useAppContext(); 
   return (
     <>
       <div className="fixed left-4 top-24 z-40">
