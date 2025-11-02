@@ -59,24 +59,25 @@ export default function AdminServicesPage() {
   };
 
   return (
+    <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
     <div className="max-w-3xl mx-auto p-6">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold">Admin — Services</h1>
+        <h1 className={`text-2xl font-bold ${isDarkMode? null : "text-gray-900"}`}>Admin — Services</h1>
       </div>
 
       <form
         onSubmit={createService}
-        className="grid grid-cols-1 gap-3 md:grid-cols-2 border p-4 rounded mb-6"
+        className={`grid grid-cols-1 gap-3 md:grid-cols-2 border p-4 rounded mb-6 ${isDarkMode ? null : "border-gray-900"}`}
       >
         <input
-          className="border p-2 rounded"
+          className={`border p-2 placeholder:text-shadow-white rounded ${isDarkMode ? null : "text-gray-900"}`}
           placeholder="Name"
           value={form.name}
           onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
           required
         />
         <input
-          className="border p-2 rounded"
+          className={`border p-2 placeholder:text-shadow-white rounded ${isDarkMode ? null : "text-gray-900"}`}
           placeholder="Price"
           type="number"
           min="0"
@@ -86,7 +87,7 @@ export default function AdminServicesPage() {
           required
         />
         <input
-          className="border p-2 rounded"
+          className={`border p-2 placeholder:text-shadow-white rounded ${isDarkMode ? null : "text-gray-900"}`}
           placeholder="Duration (minutes)"
           type="number"
           min="0"
@@ -97,7 +98,7 @@ export default function AdminServicesPage() {
           required
         />
         <input
-          className="border p-2 rounded md:col-span-2"
+          className={`border p-2 placeholder:text-shadow-white rounded ${isDarkMode ? null : "text-gray-900"}`}
           placeholder="Description"
           value={form.description}
           onChange={(e) =>
@@ -116,11 +117,11 @@ export default function AdminServicesPage() {
         {services.map((s) => (
           <div
             key={s._id}
-            className="border p-4 rounded flex items-start justify-between gap-4"
+            className={`border p-4 rounded flex items-start justify-between gap-4 ${isDarkMode ? null : "border-gray-900 text-gray-900"}`}
           >
             <div>
               <div className="font-semibold">{s.name}</div>
-              <div className="text-sm text-gray-600">{s.description}</div>
+              <div className="text-sm">{s.description}</div>
               <div className="text-sm mt-1">
                 ${s.price.toFixed(2)} • {s.durationMinutes} min
               </div>
@@ -157,6 +158,7 @@ export default function AdminServicesPage() {
           <p className="text-gray-500">No services yet.</p>
         )}
       </div>
+    </div>
     </div>
   );
 }

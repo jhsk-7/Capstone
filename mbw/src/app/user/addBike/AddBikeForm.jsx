@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { normalizeError} from "@/helpers/newErrorHandler";
+import { useAppContext } from "@/app/appContext";
 
 export default function AddBikeForm() {
   const router = useRouter();
@@ -17,6 +18,7 @@ export default function AddBikeForm() {
   });
   const [pictureFile, setPictureFile] = useState(null); // File | null
 
+  const { isDarkMode } = useAppContext();
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [okMsg, setOkMsg] = useState("");
@@ -84,7 +86,7 @@ export default function AddBikeForm() {
 
       <form onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-4">
         <div>
-          <label htmlFor="nickname" className="block mb-2">
+          <label htmlFor="nickname" className={`block mb-2 ${isDarkMode ? null : "text-gray-900"}`}>
             Nickname
           </label>
           <input
@@ -95,13 +97,13 @@ export default function AddBikeForm() {
             onChange={handleChange}
             required
             placeholder="E.g., Commuter, Roadster"
-            className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`border p-2 w-full rounded placeholder:text-shadow-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDarkMode ? null : "text-gray-900"}`}
           />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
           <div>
-            <label htmlFor="make" className="block mb-2">
+            <label htmlFor="make" className={`block mb-2 ${isDarkMode ? null : "text-gray-900"}`}>
               Make
             </label>
             <input
@@ -111,12 +113,12 @@ export default function AddBikeForm() {
               value={formData.make}
               onChange={handleChange}
               placeholder="Specialized, Trek..."
-              className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`border p-2 w-full rounded placeholder:text-shadow-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDarkMode ? null : "text-gray-900"}`}
             />
           </div>
 
           <div>
-            <label htmlFor="model" className="block mb-2">
+            <label htmlFor="model" className={`block mb-2 ${isDarkMode ? null : "text-gray-900"}`}>
               Model
             </label>
             <input
@@ -126,13 +128,13 @@ export default function AddBikeForm() {
               value={formData.model}
               onChange={handleChange}
               placeholder="Sirrus, Domane..."
-              className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`border p-2 w-full rounded placeholder:text-shadow-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDarkMode ? null : "text-gray-900"}`}
             />
           </div>
         </div>
 
         <div>
-          <label htmlFor="color" className="block mb-2">
+          <label htmlFor="color" className={`block mb-2 ${isDarkMode ? null : "text-gray-900"}`}>
             Color
           </label>
           <input
@@ -143,13 +145,13 @@ export default function AddBikeForm() {
             onChange={handleChange}
             required
             placeholder="Blue, matte black…"
-            className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`border p-2 w-full rounded placeholder:text-shadow-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDarkMode ? null : "text-gray-900"}`}
           />
         </div>
 
         {/* Picture via URL */}
         <div>
-          <label htmlFor="pictureUrl" className="block mb-2">
+          <label htmlFor="pictureUrl" className={`block mb-2 ${isDarkMode ? null : "text-gray-900"}`}>
             Picture URL (optional)
           </label>
           <input
@@ -159,13 +161,13 @@ export default function AddBikeForm() {
             value={formData.pictureUrl}
             onChange={handleChange}
             placeholder="https://example.com/my-bike.jpg"
-            className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`border p-2 w-full rounded placeholder:text-shadow-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDarkMode ? null : "text-gray-900"}`}
           />
         </div>
 
         {/* OR upload a file */}
         <div>
-          <label htmlFor="pictureFile" className="block mb-2">
+          <label htmlFor="pictureFile" className={`block mb-2 ${isDarkMode ? null : "text-gray-900"}`}>
             Or upload a picture (optional)
           </label>
           <input
@@ -174,9 +176,9 @@ export default function AddBikeForm() {
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="block w-full text-sm file:mr-4 file:rounded file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-white hover:file:bg-blue-700"
+            className={`block w-full text-sm file:mr-4 file:rounded file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-white hover:file:bg-blue-700 ${isDarkMode ? null : "text-gray-900"}`}
           />
-          <p className="text-xs text-gray-600 mt-1">
+          <p className={`text-xs mt-1 ${isDarkMode ? null : "text-gray-900"}`}>
             If both URL and file are provided, the file will be used.
           </p>
         </div>

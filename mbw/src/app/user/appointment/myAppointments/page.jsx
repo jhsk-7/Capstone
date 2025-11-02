@@ -60,7 +60,7 @@ export default function MyAppointmentsPage() {
   }, [appointments]);
 
   return (
-    <>
+    <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
       <div className="fixed left-4 top-24 z-40">
         <Link
           href="/user/appointment"
@@ -72,8 +72,8 @@ export default function MyAppointmentsPage() {
       </div>
 
       <div className="p-6 max-w-xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4">My Appointments</h1>
-        <p className="text-sm text-gray-500 mb-4">
+        <h1 className={`text-2xl font-bold mb-4 ${isDarkMode? null : "text-gray-900"}`}>My Appointments</h1>
+        <p className={`mb-4 ${isDarkMode? null : "text-gray-900"}`}>
           View all of your service upcoming appointments.
         </p>
 
@@ -84,13 +84,13 @@ export default function MyAppointmentsPage() {
         )}
 
         {loading ? (
-          <div className="text-gray-500">Loading appointments…</div>
+          <div className={`${isDarkMode? null : "text-gray-900"}`}>Loading appointments…</div>
         ) : appointments.length === 0 ? (
-          <div className="text-gray-600">No appointments yet.</div>
+          <div className={`${isDarkMode? null : "text-gray-900"}`}>No appointments yet.</div>
         ) : (
           Array.from(grouped.entries()).map(([day, items]) => (
             <div key={day} className="mb-6">
-              <h2 className="text-sm font-semibold text-gray-500 mb-2">{day}</h2>
+              <h2 className={`text-sm font-semibold mb-2 ${isDarkMode? null : "text-gray-900"}`}>{day}</h2>
               <div className="space-y-3">
                 {items.map((a, idx) => {
                   // handle string ids and {$oid: "..."}
@@ -105,18 +105,17 @@ export default function MyAppointmentsPage() {
                       role="button"
                       tabIndex={0}
                       onClick={go}
-                      className="border p-4 rounded cursor-pointer hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className={`border p-4 rounded cursor-pointer hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500  ${isDarkMode? null : "text-gray-900"}`}
                       aria-label={`Open appointment on ${formatDate(a.date)}`}
                     >
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-base font-medium">{formatDate(a.date)}</span>
                         <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-700">
                           {a.status}
                         </span>
                       </div>
 
                       {/* Bikes & Services */}
-                      <div className="text-sm text-gray-700 space-y-1">
+                      <div className={`text-sm space-y-1 ${isDarkMode? null : "text-gray-900"}`}>
                         {Array.isArray(a.bikes) && a.bikes.length > 0 ? (
                           a.bikes.map((b, i) => {
                             const bikeLabel =
@@ -154,6 +153,6 @@ export default function MyAppointmentsPage() {
           ))
         )}
       </div>
-    </>
+    </div>
   );
 }

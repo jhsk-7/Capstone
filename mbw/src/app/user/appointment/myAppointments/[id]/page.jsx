@@ -58,6 +58,7 @@ export default function AppointmentDetailPage() {
   // --- Loading skeleton ---
   if (loading) {
     return (
+    <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>     
       <div className="p-6 max-w-xl mx-auto">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold">Appointment</h1>
@@ -70,13 +71,15 @@ export default function AppointmentDetailPage() {
           </div>
         </div>
       </div>
+    </div>
     );
   }
 
   // --- Error state ---
   if (error) {
     return (
-    <div className="p-6 max-w-xl mx-auto">
+      <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
+      <div className="p-6 max-w-xl mx-auto">
         <div className="fixed left-4 top-24 z-40">
           <Link
             href="/user/appointment/myAppointments"
@@ -92,11 +95,13 @@ export default function AppointmentDetailPage() {
           {error}
         </div>
       </div>
+      </div>
     );
   }
 
   if (!appt) {
     return (
+    <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
     <div className="p-6 max-w-xl mx-auto">
       <div className="fixed left-4 top-24 z-40">
           <h1 className="text-2xl font-bold">Appointment</h1>
@@ -109,12 +114,14 @@ export default function AppointmentDetailPage() {
         </div>
         <div className="text-gray-600">Appointment not found.</div>
       </div>
+      </div>
     );
   }
 
 
 
   return (
+  <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? "" : "bg-white"}`}>
     <div className="p-6 max-w-xl mx-auto">
       <div className="fixed left-4 top-24 z-40">
         <Link
@@ -126,45 +133,50 @@ export default function AppointmentDetailPage() {
         </Link>
       </div>
 
-      <h1 className="text-2xl font-bold mb-4">Appointment</h1>
-      <p className="text-sm text-gray-500 mb-4">
+      <h1 className={`text-2xl font-bold mb-4 ${isDarkMode ? "" : "text-gray-900"}`}>
+        Appointment
+      </h1>
+      <p className={`${isDarkMode ? "" : "text-gray-900"} mb-4`}>
         Details for this service appointment.
       </p>
 
-      <div className="space-y-3">
+      {/* Date header above details box (matches list page style) */}
+      <h2 className={`text-sm font-semibold mb-2 ${isDarkMode ? "" : "text-gray-900"}`}>
+        {dateLabel}
+      </h2>
+
+      <div className="border rounded border-gray-900 space-y-3">
         <div className="border p-4 rounded">
-          {/* Top row: date + status pill */}
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-base font-medium">{dateLabel}</span>
             <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-700">
               {appt.status || "Pending"}
             </span>
           </div>
 
-            {/* Bikes & Services */}
-            <div className="text-sm text-gray-700 space-y-1">
+          {/* Bikes & Services */}
+          <div className={`${isDarkMode ? "" : "text-gray-900"} space-y-1`}>
             {Array.isArray(appt.bikes) && appt.bikes.length > 0 ? (
-                appt.bikes.map((b, idx) => {
+              appt.bikes.map((b, idx) => {
                 const nickname =
-                    typeof b?.bikeId === "object" ? b.bikeId?.nickname ?? "—" : "—";
+                  typeof b?.bikeId === "object" ? b.bikeId?.nickname ?? "—" : "—";
 
                 const serviceNames = Array.isArray(b?.services)
-                    ? b.services
-                        .map((s) => (typeof s === "object" ? s?.name : null))
-                        .filter(Boolean)
-                        .join(", ")
-                    : "";
+                  ? b.services
+                      .map((s) => (typeof s === "object" ? s?.name : null))
+                      .filter(Boolean)
+                      .join(", ")
+                  : "";
 
-            const key =
-                (typeof b?.bikeId === "object" && (b.bikeId?._id || b.bikeId?.id)) ||
-                (typeof b?.bikeId === "string" && b.bikeId) ||
-                idx;
+                const key =
+                  (typeof b?.bikeId === "object" && (b.bikeId?._id || b.bikeId?.id)) ||
+                  (typeof b?.bikeId === "string" && b.bikeId) ||
+                  idx;
 
                 return (
                   <div key={key}>
                     <span className="font-medium">Bike:</span> {nickname}
                     <span className="text-gray-300 mx-2">-</span>
-                    <span className="font-medium">Services:</span> {serviceNames}
+                    <span className="font-medium">Services:</span> {serviceNames || "—"}
                   </div>
                 );
               })
@@ -172,18 +184,9 @@ export default function AppointmentDetailPage() {
               <div>No bike/services detail</div>
             )}
           </div>
-
-          {/* Metadata */}
-          <div className="text-xs text-gray-400 mt-3 space-y-0.5">
-            {appt.createdAt && (
-              <div>Created: {formatDate(appt.createdAt)}</div>
-            )}
-            {appt.updatedAt && (
-              <div>Updated: {formatDate(appt.updatedAt)}</div>
-            )}
-          </div>
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 }

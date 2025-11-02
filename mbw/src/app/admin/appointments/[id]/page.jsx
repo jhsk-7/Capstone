@@ -134,6 +134,7 @@ export default function AppointmentDetailPage() {
 
 
   return (
+    <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
     <div className="p-6 max-w-xl mx-auto">
       <div className="fixed left-4 top-24 z-40">
         <Link
@@ -144,17 +145,18 @@ export default function AppointmentDetailPage() {
         </Link>
       </div>
 
-      <h1 className="text-2xl font-bold mb-4">Appointment</h1>
-      <p className="text-sm text-gray-500 mb-4">
+      <h1 className={`text-2xl font-bold mb-4 ${isDarkMode ? "" : "text-gray-900"}`}>Appointment</h1>
+      <p className={`${isDarkMode ? "" : "text-gray-900"} mb-4`}>
         Details for this service appointment.
       </p>
+      
+      <h2 className={`text-sm font-semibold mb-2 ${isDarkMode ? "" : "text-gray-900"}`}>
+        {dateLabel}
+      </h2>
 
-      <div className="space-y-3">
+      <div className="border border-gray-900 space-y-3">
         <div className="border p-4 rounded">
-          {/* Top row: date + status pill */}
           <div className="flex items-center gap-2 mb-2">
-
-            <span className="text-base font-medium">{dateLabel}</span>
             <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-700">
               {appt.status || "Pending"}
             </span>
@@ -193,7 +195,7 @@ export default function AppointmentDetailPage() {
           </div>
 
           {/* Metadata */}
-          <div className="text-xs text-gray-400 mt-3 space-y-0.5">
+          <div className={`text-xs mt-3 space-y-0.5 ${isDarkMode ? null : "text-gray-900"}`}>
             {appt.createdAt && (
               <div>Created: {formatDate(appt.createdAt)}</div>
             )}
@@ -203,27 +205,28 @@ export default function AppointmentDetailPage() {
           </div>
         </div>
           <button
-            className="ml-auto px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 mr-4"
+            className="ml-3 px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 mr-4"
             disabled={updating || appt.status === "Confirmed"}
             onClick={() => handleStatusUpdate("Confirmed")}
           >
             Confirmed
           </button>
           <button
-            className="ml-auto px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 mr-4"
+            className="ml-auto px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 mr-4"
             disabled={updating || appt.status === "Completed"}
             onClick={() => handleStatusUpdate("Completed")}
           >
             Completed
           </button>
           <button
-            className="ml-auto px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
+            className="ml-auto px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
             disabled={updating || appt.status === "Cancelled"}
             onClick={() => handleStatusUpdate("Cancelled")}
           >
             Cancelled
           </button>
       </div>
+    </div>
     </div>
   );
 }

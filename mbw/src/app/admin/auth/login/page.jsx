@@ -49,8 +49,9 @@ export default function AdminLogin() {
 
 
 return (
+  <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
   <div className="p-6 max-w-xl mx-auto">
-    <h1 className="text-2xl font-bold mb-4">Admin Log in</h1>
+    <h1 className={`text-2xl font-bold mb-4 ${isDarkMode? null : "text-gray-900"}`}>Admin Log in</h1>
 
     {errMsg && (
       <div className="mb-4 p-4 border border-red-300 bg-red-50 rounded text-red-700">
@@ -60,7 +61,7 @@ return (
 
     <form onSubmit={onLogin} className="space-y-4">
       <div>
-        <label htmlFor="email" className="block mb-2">
+        <label htmlFor="email" className={`block mb-2 ${isDarkMode ? null : "text-gray-900"}`}>
           Email
         </label>
         <input
@@ -68,12 +69,12 @@ return (
           value={user.email}
           onChange={(e) => setUser((u) => ({ ...u, email: e.target.value }))}
           placeholder="you@example.com"
-          className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={`border p-2 w-full rounded placeholder:text-shadow-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDarkMode ? null : "text-gray-900"}`}
         />
       </div>
 
       <div>
-        <label htmlFor="password" className="block mb-2">
+        <label htmlFor="password" className={`block mb-2 ${isDarkMode ? null : "text-gray-900"}`}>
           Password
         </label>
         <input
@@ -82,7 +83,7 @@ return (
           value={user.password}
           onChange={(e) => setUser((u) => ({ ...u, password: e.target.value }))}
           placeholder="••••••••"
-          className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={`border p-2 w-full rounded placeholder:text-shadow-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDarkMode ? null : "text-gray-900"}`}
           required
           autoComplete="current-password"
         />
@@ -97,13 +98,14 @@ return (
       </button>
     </form>
 
-    <div className="mt-4 text-sm text-gray-700">
+    <div className={`mt-4 ${isDarkMode ? null : "text-gray-900"}`}>
       <span className="mr-2">Don’t have an account?</span>
       <Link href="/admin/auth/signup" className="text-blue-600 hover:underline">
         Sign up
       </Link>
     </div>
 
+  </div>
   </div>
 );
 }

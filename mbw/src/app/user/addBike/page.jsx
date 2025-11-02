@@ -6,8 +6,9 @@ import { useAppContext } from "@/app/appContext";
 
 export default function AddBikePage() {
   const { isDarkMode } = useAppContext(); 
+  
   return (
-    <>
+    <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>    
       <div className="fixed left-4 top-24 z-40">
         <Link
           href="/user/myBikes"
@@ -19,8 +20,8 @@ export default function AddBikePage() {
       </div>
 
       <div className="p-6 max-w-xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4">Add Bike</h1>
-        <p className="text-sm text-gray-500 mb-4">
+        <h1 className={`text-2xl font-bold mb-4 ${isDarkMode? null : "text-gray-900"}`}>Add Bike</h1>
+        <p className={`mb-4 ${isDarkMode? null : "text-gray-900"}`}>
           Fill out form to create a new bike.
         </p>
 
@@ -28,5 +29,5 @@ export default function AddBikePage() {
           <AddBikeForm/>
         </div>
       </div>
-    </>
+    </div>
 )};

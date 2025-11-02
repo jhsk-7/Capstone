@@ -40,8 +40,9 @@ export default function AdminSignup() {
 
 
 return (
+    <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
     <div className="p-6 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Sign up</h1>
+      <h1 className={`text-2xl font-bold mb-4 ${isDarkMode? null : "text-gray-900"}`}>Sign up</h1>
 
       {errMsg && (
         <div className="mb-4 p-4 border border-red-300 bg-red-50 rounded text-red-700">
@@ -51,7 +52,7 @@ return (
 
       <form onSubmit={onSignup} className="space-y-4">
         <div>
-          <label htmlFor="username" className="block mb-2">
+          <label htmlFor="username" className={`block mb-2 ${isDarkMode ? null : "text-gray-900"}`}>
             Username
           </label>
           <input
@@ -60,14 +61,14 @@ return (
             value={user.username}
             onChange={(e) => setUser((u) => ({ ...u, username: e.target.value }))}
             placeholder="yourname"
-            className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`border p-2 w-full rounded placeholder:text-shadow-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDarkMode ? null : "text-gray-900"}`}
             required
             autoComplete="username"
           />
         </div>
 
         <div>
-          <label htmlFor="email" className="block mb-2">
+          <label htmlFor="email" className={`block mb-2 ${isDarkMode ? null : "text-gray-900"}`}>
             Email
           </label>
           <input
@@ -76,14 +77,14 @@ return (
             value={user.email}
             onChange={(e) => setUser((u) => ({ ...u, email: e.target.value }))}
             placeholder="you@example.com"
-            className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`border p-2 w-full rounded placeholder:text-shadow-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDarkMode ? null : "text-gray-900"}`}
             required
             autoComplete="email"
           />
         </div>
 
         <div>
-          <label htmlFor="password" className="block mb-2">
+          <label htmlFor="password" className={`block mb-2 ${isDarkMode ? null : "text-gray-900"}`}>
             Password
           </label>
           <input
@@ -92,14 +93,14 @@ return (
             value={user.password}
             onChange={(e) => setUser((u) => ({ ...u, password: e.target.value }))}
             placeholder="••••••••"
-            className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`border p-2 w-full rounded placeholder:text-shadow-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDarkMode ? null : "text-gray-900"}`}
             required
             autoComplete="new-password"
           />
         </div>
 
         <div>
-          <label htmlFor="secretCode" className="block mb-2">
+          <label htmlFor="secretCode" className={`block mb-2 ${isDarkMode ? null : "text-gray-900"}`}>
             Secret Code
           </label>
           <input
@@ -108,7 +109,7 @@ return (
             value={user.secretCode}
             onChange={(e) => setUser((u) => ({ ...u, secretCode: e.target.value }))}
             placeholder="Secret Code"
-            className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`border p-2 w-full rounded placeholder:text-shadow-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDarkMode ? null : "text-black"}`}
             required
           />
         </div>
@@ -122,12 +123,13 @@ return (
         </button>
       </form>
 
-      <div className="mt-4 text-sm text-gray-700">
-        <span className="mr-2">Already have an account?</span>
-        <Link href="/admin/auth/login" className="text-blue-100 underline hover:text-white">
+      <div className="mt-4">
+        <span className={`mr-2 ${isDarkMode? null : "text-gray-900"}`}>Already have an account?</span>
+        <Link href="/admin/auth/login" className="text-blue-600  hover:underline">
           Log in
         </Link>
       </div>
+    </div>
     </div>
   );
 }

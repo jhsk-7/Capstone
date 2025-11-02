@@ -107,8 +107,7 @@ export default function AppointmentPage() {
   };
 
   return (
-    <>
-      {/* Left-side fixed button */}
+    <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
       <div className="fixed left-4 top-24 z-40">
         <Link
           href="/user/appointment/myAppointments"
@@ -120,24 +119,24 @@ export default function AppointmentPage() {
       </div>
 
       <div className="p-6 max-w-xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4">Book a Service Appointment</h1>
+        <h1 className={`text-2xl font-bold mb-4 ${isDarkMode? null : "text-gray-900"}`}>Book a Service Appointment</h1>
 
-        <label className="block mb-2">Select Date:</label>
+        <label className={`block mb-2 ${isDarkMode? null : "text-gray-900"}`}>Select Date:</label>
         <input
           type="date"
-          className="border p-2 w-full mb-4 rounded"
+          className="border border-gray-900 p-2 w-full mb-4 rounded"
           value={date}
           min={todayStr}
           onChange={(e) => setDate(e.target.value)}
         />
 
-        <h2 className="text-lg font-semibold mb-2">Select Bikes & Services</h2>
+        <h2 className={`text-lg mb-2 ${isDarkMode? null : "text-gray-900"}`}>Select Bikes & Services</h2>
         <div className="space-y-4">
           {bikes.map((bike) => {
             const selectedBike = selectedBikes.find((b) => b.bikeId === bike._id);
             return (
-              <div key={bike._id} className="border p-4 rounded">
-                <label className="flex items-center space-x-2 mb-2">
+              <div key={bike._id} className="border border-gray-900 p-4 rounded">
+                <label className={`flex items-center space-x-2 mb-2 ${isDarkMode? null : "text-gray-900"}`}>
                   <input
                     type="checkbox"
                     checked={!!selectedBike}
@@ -190,6 +189,6 @@ export default function AppointmentPage() {
           {submitting ? "Booking..." : "Book Appointment"}
         </button>
       </div>
-    </>
+    </div>
   );
 }
