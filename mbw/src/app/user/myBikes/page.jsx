@@ -8,7 +8,7 @@ import { normalizeError } from "@/helpers/newErrorHandler";
 import { useAppContext } from "@/app/appContext";
 
 export default function BikesPage() {
-  const { isDarkMode } = useAppContext();   
+  const { setNavContext, isDarkMode } = useAppContext();   
   const [bikes, setBikes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -19,6 +19,7 @@ export default function BikesPage() {
       try {
         const res = await axios.get("/api/users/bikes/myBikes", { withCredentials: true });
         setBikes(res.data.data || []);
+        setNavContext('userIn');
       } catch (err) {
         const findStatus = async () => {
           const { status, message} = normalizeError(err);

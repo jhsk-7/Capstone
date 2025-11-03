@@ -4,10 +4,10 @@ import { useEffect } from "react";
 import { useAppContext } from "@/app/appContext";
 
 export default function HomePage() {
-  const { setIsHome, isDarkMode } = useAppContext();
+  const { setNavContext, isDarkMode } = useAppContext();
 
   useEffect(() => {
-    setIsHome(true);
+    setNavContext('home');
   }, []);
 
   return (

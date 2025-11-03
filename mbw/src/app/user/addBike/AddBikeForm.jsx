@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { normalizeError} from "@/helpers/newErrorHandler";
@@ -18,10 +18,14 @@ export default function AddBikeForm() {
   });
   const [pictureFile, setPictureFile] = useState(null); // File | null
 
-  const { isDarkMode } = useAppContext();
+  const { setNavContext, isDarkMode } = useAppContext();
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [okMsg, setOkMsg] = useState("");
+
+  useEffect(() => {
+    setNavContext('userIn');
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

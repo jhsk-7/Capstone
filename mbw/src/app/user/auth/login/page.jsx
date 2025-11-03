@@ -11,7 +11,7 @@ import { useAppContext } from "@/app/appContext";
 export default function LoginPage() {
   const router = useRouter();
 
-  const { setIsLoggedIn, setIsHome, isDarkMode } = useAppContext(); 
+  const { setIsLoggedIn, isDarkMode, setNavContext } = useAppContext(); 
   const [user, setUser] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
@@ -19,7 +19,7 @@ export default function LoginPage() {
   const isDisabled = loading || !user.email || !user.password;
 
   useEffect(() => {
-    setIsHome(false);
+    setNavContext('login')
   }, []);
 
   const onLogin = async (e) => {

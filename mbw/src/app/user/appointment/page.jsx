@@ -6,7 +6,7 @@ import axios from "axios";
 import { useAppContext } from "@/app/appContext";
 
 export default function AppointmentPage() {
-  const { isDarkMode } = useAppContext();   
+  const { setNavContext, isDarkMode } = useAppContext();   
   const [userId, setUserId] = useState("");
   const [bikes, setBikes] = useState([]);
   const [services, setServices] = useState([]); // [{ _id, name, ... }]
@@ -38,6 +38,8 @@ export default function AppointmentPage() {
         // Services
         const servicesRes = await axios.get("/api/users/services", { withCredentials: true });
         setServices(servicesRes.data.data || []);
+
+        setNavContext('userIn');
       } catch (err) {
         const findStatus = async () => {
           const { status, message} = normalizeError(err);

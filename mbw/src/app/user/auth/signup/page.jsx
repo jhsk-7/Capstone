@@ -6,12 +6,13 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { normalizeError} from "@/helpers/newErrorHandler";
 import { useAppContext } from "@/app/appContext";
+import { set } from "mongoose";
 
 
 export default function SignupPage() {
   const router = useRouter();
 
-  const { setIsHome, isDarkMode } = useAppContext(); 
+  const { setNavContext, isDarkMode } = useAppContext(); 
   const [user, setUser] = useState({ email: "", username: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
@@ -19,7 +20,7 @@ export default function SignupPage() {
   const isDisabled = loading || !user.email || !user.username || !user.password;
 
   useEffect(() => {
-    setIsHome(false);
+    setNavContext('signup')
   }, []);
 
   const onSignup = async (e) => {

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAppContext } from "@/app/appContext";
 
 export default function AdminServicesPage() {
-  const { isDarkMode } = useAppContext(); 
+  const { setNavContext, isDarkMode } = useAppContext(); 
   const [services, setServices] = useState([]);
   const [form, setForm] = useState({
     name: "",
@@ -23,6 +23,7 @@ export default function AdminServicesPage() {
 
   useEffect(() => {
     load();
+    setNavContext('adminIn');
   }, []);
 
   const createService = async (e) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
@@ -28,13 +28,16 @@ function formatDate(input) {
 export default function AppointmentDetailPage() {
   // Status update handler
 
-  const { isDarkMode } = useAppContext(); 
+  const { setNavContext, isDarkMode } = useAppContext(); 
   const { id } = useParams();
   const [appt, setAppt] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [updating, setUpdating] = useState(false);
 
+  useEffect(() => {
+    setNavContext('adminIn');
+  }, []);
 
   useEffect(() => {
     if (!id) return;

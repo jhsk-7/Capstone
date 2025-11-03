@@ -14,11 +14,15 @@ export default function AdminLogin() {
     email: "",
     password: "",
   });
-  const { setIsAdminLoggedIn, isDarkMode } = useAppContext(); 
+  const { setNavContext, setIsAdminLoggedIn, isDarkMode } = useAppContext(); 
   const [errMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const isDisabled = loading || !user.email || !user.password;
+
+  useEffect(() => {
+    setNavContext('adminLogin');
+  }, []);
 
   useEffect(() => {
     setButtonDisabled(!(user.email && user.password));

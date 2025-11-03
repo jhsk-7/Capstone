@@ -1,20 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useAppContext } from "@/app/appContext";
 import { normalizeError} from "@/helpers/newErrorHandler";
 
 export default function AdminSignup() {
-  const { isDarkMode } = useAppContext();   
+  const { setNavContext, isDarkMode } = useAppContext();   
   const router = useRouter();
   const [user, setUser] = useState({ email: "", username: "", password: "", secretCode: "" });
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
   const isDisabled = loading || !user.email || !user.username || !user.password || !user.secretCode;
+
+  useEffect(() => {
+    setNavContext('signup');
+  },[]);
 
   const onSignup = async (e) => {
     e?.preventDefault();

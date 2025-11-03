@@ -8,7 +8,7 @@ import { normalizeError } from "@/helpers/newErrorHandler";
 import { useAppContext } from "@/app/appContext";
 
 export default function BikeDetailPage() {
-  const { isDarkMode } = useAppContext();   
+  const { setNavContext, isDarkMode } = useAppContext();   
   const { id } = useParams();
   const router = useRouter();
 
@@ -19,6 +19,10 @@ export default function BikeDetailPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [actionError, setActionError] = useState("");
+
+  useEffect(() => {
+    setNavContext('userIn');
+  }, []);
 
   useEffect(() => {
     const fetchBike = async () => {

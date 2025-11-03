@@ -20,7 +20,7 @@ function formatDate(d) {
 }
 
 export default function MyAppointmentsPage() {
-  const { isDarkMode } = useAppContext(); 
+  const { setNavContext, isDarkMode } = useAppContext(); 
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -47,6 +47,7 @@ export default function MyAppointmentsPage() {
 
   useEffect(() => {
     fetchAppointments();
+    setNavContext('adminIn');
   }, []);
 
   const grouped = useMemo(() => {

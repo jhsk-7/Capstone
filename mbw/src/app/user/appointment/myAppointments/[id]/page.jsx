@@ -26,11 +26,16 @@ function formatDate(input) {
 }
 
 export default function AppointmentDetailPage() {
-  const { isDarkMode } = useAppContext();   
+  const { setNavContext, isDarkMode } = useAppContext();   
   const { id } = useParams();
   const [appt, setAppt] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+
+  useEffect(() => {    
+    setNavContext('userIn');
+  }, []);
 
   useEffect(() => {
     if (!id) return;
