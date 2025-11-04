@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import axios from 'axios';
+import AppointmentDetailPage from '@/app/user/appointment/myAppointments/[id]/page';
 
 jest.mock('axios');
 jest.mock('next/navigation', () => ({
   useParams: () => ({ id: 'a1' }),
 }));
 
-import AppointmentDetailPage from '@/app/user/appointment/myAppointments/[id]/page';
 
 test('renders appointment detail after loading', async () => {
   axios.get.mockResolvedValueOnce({

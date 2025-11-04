@@ -12,7 +12,7 @@ jest.mock('next/navigation', () => ({
 jest.mock('@/app/appContext', () => ({
   useAppContext: () => ({
     setIsLoggedIn: jest.fn(),
-    setIsHome: jest.fn(),
+    setNavContext: jest.fn(),
     isDarkMode: false,
   }),
 }));
