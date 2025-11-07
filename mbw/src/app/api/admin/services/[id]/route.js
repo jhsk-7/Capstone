@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
+import { connectToDB } from "@/dbConfig/db";
 import Service from "@/models/serviceModel";
 import { requireAdmin } from "@/helpers/adminAuth";
 
-connect();
 
 export async function PATCH(request, { params }) {
+  await connectToDB();
+  
   const gate = requireAdmin(request);
   if (!gate.ok) return gate.res;
 

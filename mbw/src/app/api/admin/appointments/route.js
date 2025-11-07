@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
+import { connectToDB } from "@/dbConfig/db";
 import Appointment from "@/models/appointmentModel";
 import "@/models/userModel";
 import "@/models/bikeModel";   
 import "@/models/serviceModel"; 
 
-connect();
-
 export async function GET(request) {
+  await connectToDB();  
+  
   try {
     const appts = await Appointment.find({})
       .populate({

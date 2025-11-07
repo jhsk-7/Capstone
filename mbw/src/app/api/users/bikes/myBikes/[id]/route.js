@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
+import { connectToDB } from "@/dbConfig/db";
 import Bike from "@/models/bikeModel";
 import Appointment from "@/models/appointmentModel"; // ✅ needed
 import { getDataFromToken } from "@/helpers/userAuth";
 import mongoose from "mongoose";
 
-connect();
 
 // GET /api/bikes/myBikes/[id]
 export async function GET(request, context) {
+  await connectToDB();
+
   try {
     const userId = await getDataFromToken(request);
     if (!userId) {

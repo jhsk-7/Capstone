@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
 import Service from "@/models/serviceModel";
 import { requireAdmin } from "@/helpers/adminAuth";
-
-connect();
+import { connectToDB } from "@/dbConfig/db";
 
 export async function GET(request) {
+  await connectToDB();
+
   const gate = requireAdmin(request);
   if (!gate.ok) return gate.res;
 

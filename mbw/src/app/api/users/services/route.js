@@ -1,11 +1,11 @@
 // /app/api/services/route.js (Next.js App Router)
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
+import { connectToDB } from "@/dbConfig/db";
 import Service from "@/models/serviceModel";
 
-connect();
-
 export async function GET() {
+  await connectToDB();
+  
   try {
     const services = await Service.find(); 
     return NextResponse.json({ data: services }, { status: 200 });

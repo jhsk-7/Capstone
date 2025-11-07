@@ -1,14 +1,16 @@
 // /app/api/bikes/myBikes/route.js
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
+import { connectToDB } from "@/dbConfig/db";
 import Bike from "@/models/bikeModel";
 import { getDataFromToken } from "@/helpers/userAuth";
 
 
-connect();
+
 export const dynamic = "force-dynamic";
 
 export async function GET(request) {
+  await connectToDB();
+  
   try {
     const userId = await getDataFromToken(request);
     if (!userId) {

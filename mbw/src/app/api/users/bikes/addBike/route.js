@@ -1,14 +1,16 @@
 // /app/api/bikes/route.js (or route.ts)
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
+import { connectToDB } from "@/dbConfig/db";
 import Bike from "@/models/bikeModel";
 import { getDataFromToken } from "@/helpers/userAuth";
 import fs from "fs/promises";
 import path from "path";
 
-connect();
+
 
 export async function POST(req) {
+  await connectToDB();
+  
   try {
     const userId = await getDataFromToken(req);
     if (!userId) {
