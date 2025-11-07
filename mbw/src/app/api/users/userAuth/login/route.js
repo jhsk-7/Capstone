@@ -4,6 +4,9 @@ import { NextResponse} from "next/server";
 import bcryptjs, { hash } from "bcryptjs";
 import jwt from "jsonwebtoken"
 
+export const dynamic = "force-dynamic";
+
+
 export async function POST(request){
     await connectToDB();
 

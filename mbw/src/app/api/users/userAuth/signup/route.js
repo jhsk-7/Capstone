@@ -3,6 +3,9 @@ import User from "@/models/userModel"
 import { NextResponse} from "next/server";
 import bcryptjs, { hash } from "bcryptjs";
 
+export const dynamic = "force-dynamic";
+
+
 export async function POST(request){
     await connectToDB();    
     try {
