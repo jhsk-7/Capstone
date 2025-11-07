@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
+import { connectToDB } from "@/dbConfig/db";
 import Admin from "@/models/adminModel";
 import bcrypt from "bcryptjs";
 import { serialize } from "cookie";
 import { signAdminJWT } from "@/helpers/adminAuth";
 
 
-connect();
 
 export async function POST(request) {
+  await connectToDB();
   try {
     const { email, password } = await request.json();
     if (!email || !password) {
