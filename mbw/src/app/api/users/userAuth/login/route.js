@@ -4,6 +4,7 @@ import { NextResponse} from "next/server";
 import bcryptjs, { hash } from "bcryptjs";
 import jwt from "jsonwebtoken"
 
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 

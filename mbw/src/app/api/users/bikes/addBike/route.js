@@ -1,4 +1,3 @@
-// /app/api/bikes/route.js (or route.ts)
 import { NextResponse } from "next/server";
 import { connectToDB } from "@/dbConfig/db";
 import Bike from "@/models/bikeModel";
@@ -6,6 +5,7 @@ import { getDataFromToken } from "@/helpers/userAuth";
 import fs from "fs/promises";
 import path from "path";
 
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 

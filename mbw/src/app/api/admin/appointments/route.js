@@ -5,6 +5,7 @@ import "@/models/userModel";
 import "@/models/bikeModel";   
 import "@/models/serviceModel"; 
 
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 

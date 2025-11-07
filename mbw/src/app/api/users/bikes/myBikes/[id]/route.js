@@ -5,7 +5,7 @@ import Appointment from "@/models/appointmentModel"; // ✅ needed
 import { getDataFromToken } from "@/helpers/userAuth";
 import mongoose from "mongoose";
 
-
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 

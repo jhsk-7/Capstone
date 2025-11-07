@@ -8,7 +8,7 @@ import "@/models/serviceModel";
 import { getDataFromToken } from "@/helpers/userAuth";
 import mongoose from "mongoose";
 
-
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 

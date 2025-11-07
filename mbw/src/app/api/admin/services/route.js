@@ -3,6 +3,7 @@ import Service from "@/models/serviceModel";
 import { requireAdmin } from "@/helpers/adminAuth";
 import { connectToDB } from "@/dbConfig/db";
 
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 

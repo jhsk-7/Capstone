@@ -5,6 +5,7 @@ import "@/models/serviceModel";
 import { getDataFromToken } from "@/helpers/userAuth";
 import { connectToDB } from "@/dbConfig/db";
 
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 
