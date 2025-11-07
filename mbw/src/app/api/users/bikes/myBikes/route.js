@@ -7,8 +7,6 @@ import { getDataFromToken } from "@/helpers/userAuth";
 export const dynamic = "force-dynamic";
 
 
-export const dynamic = "force-dynamic";
-
 export async function GET(request) {
   await connectToDB();
   
