@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { serialize } from "cookie";
 import { signAdminJWT } from "@/helpers/adminAuth";
 
+export const dynamic = "force-dynamic";
 
 
 export async function POST(request) {

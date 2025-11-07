@@ -5,6 +5,9 @@ import "@/models/userModel";
 import "@/models/bikeModel";   
 import "@/models/serviceModel"; 
 
+export const dynamic = "force-dynamic";
+
+
 export async function GET(request) {
   await connectToDB();  
   

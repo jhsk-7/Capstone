@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
 import Appointment from "@/models/appointmentModel";
 import "@/models/bikeModel"; 
 import "@/models/serviceModel"; 
 import { getDataFromToken } from "@/helpers/userAuth";
-
-
-connect();
+import { connectToDB } from "@/dbConfig/db";
 
 export async function POST(request) {
+  await connectToDB();
+
   try {
     const authUserId = await getDataFromToken(request);
     if (!authUserId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

@@ -4,6 +4,9 @@ import Service from "@/models/serviceModel";
 import { requireAdmin } from "@/helpers/adminAuth";
 
 
+export const dynamic = "force-dynamic";
+
+
 export async function PATCH(request, { params }) {
   await connectToDB();
   
