@@ -9,6 +9,7 @@ import { signAdminJWT } from "@/helpers/adminAuth";
 
 export async function POST(request) {
   await connectToDB();
+  //testing comment
   try {
     const { email, password } = await request.json();
     if (!email || !password) {
