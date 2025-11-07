@@ -4,6 +4,9 @@ import Appointment from "@/models/appointmentModel";
 import { getDataFromToken } from "@/helpers/userAuth";
 import mongoose from "mongoose";
 
+export const dynamic = "force-dynamic";
+
+
 export async function GET(request, context) {
   await connectToDB();  
 

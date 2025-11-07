@@ -4,6 +4,7 @@ import { connectToDB } from "@/dbConfig/db";
 import Bike from "@/models/bikeModel";
 import { getDataFromToken } from "@/helpers/userAuth";
 
+export const dynamic = "force-dynamic";
 
 
 export const dynamic = "force-dynamic";

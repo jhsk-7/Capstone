@@ -5,6 +5,9 @@ import "@/models/serviceModel";
 import { getDataFromToken } from "@/helpers/userAuth";
 import { connectToDB } from "@/dbConfig/db";
 
+export const dynamic = "force-dynamic";
+
+
 export async function POST(request) {
   await connectToDB();
 

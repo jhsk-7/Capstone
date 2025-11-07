@@ -3,6 +3,9 @@ import { NextResponse } from "next/server";
 import { connectToDB } from "@/dbConfig/db";
 import Service from "@/models/serviceModel";
 
+export const dynamic = "force-dynamic";
+
+
 export async function GET() {
   await connectToDB();
   
