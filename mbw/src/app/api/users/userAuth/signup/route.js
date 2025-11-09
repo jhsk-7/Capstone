@@ -8,8 +8,8 @@ export const dynamic = "force-dynamic";
 
 
 export async function POST(request){
-    await connectToDB();    
     try {
+        await connectToDB();    
         const reqBody = await request.json();
         const {username, email, password} = reqBody;        
           
@@ -23,8 +23,7 @@ export async function POST(request){
         }
 
         const salt = await bcryptjs.genSalt(10)
-        const hashedPassword = await bcryptjs.hash
-        (password, salt)
+        const hashedPassword = await bcryptjs.hash(password, salt)
 
         const newUser = new User({
             username,
