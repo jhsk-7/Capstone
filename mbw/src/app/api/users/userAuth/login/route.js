@@ -9,9 +9,8 @@ export const dynamic = "force-dynamic";
 
 
 export async function POST(request){
-    await connectToDB();
-
     try {
+        await connectToDB();
         const reqBody = await request.json();
         const {email, password} = reqBody;
         
