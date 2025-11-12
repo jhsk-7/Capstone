@@ -112,9 +112,11 @@ export default function BikesPage() {
 
   // --- List ---
   return (
+    <>
     <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
     <div className="p-6 max-w-xl mx-auto">
-      <div className="fixed left-4 top-24 z-40">
+      {/* Fixed add button for wide screens; in-flow button appears above the H1 on small screens */}
+      <div className="fixed left-4 top-24 z-40 hide-on-small">
         <Link
           href="/user/addBike"
           className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 shadow"
@@ -124,6 +126,16 @@ export default function BikesPage() {
       </div>
 
       <div>
+        {/* In-flow add button shown on small screens */}
+        <div className="show-on-small" style={{ display: 'none' }}>
+          <Link
+            href="/user/addBike"
+            className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 shadow mb-4"
+          >
+            Add Bike
+          </Link>
+        </div>
+
         <div className={`${isDarkMode? null : "text-gray-900"}`}>
         <h1 className="text-2xl font-bold mb-4">My Bikes</h1>
         <p className="mb-4">View your bikes collection.</p>
@@ -186,5 +198,16 @@ export default function BikesPage() {
       </div>
     </div>
     </div>
+    <style jsx>{`
+      @media (max-width: 999px) {
+        .hide-on-small { display: none !important; }
+        .show-on-small { display: block !important; margin-bottom: 0.5rem; }
+      }
+      @media (min-width: 1000px) {
+        .hide-on-small { display: block !important; }
+        .show-on-small { display: none !important; }
+      }
+    `}</style>
+    </>
   );
 }

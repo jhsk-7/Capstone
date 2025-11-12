@@ -61,7 +61,8 @@ export default function MyAppointmentsPage() {
 
   return (
     <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
-      <div className="fixed left-4 top-24 z-40">
+      {/* Fixed button for wide screens */}
+      <div className="fixed left-4 top-24 z-40 hide-on-small">
         <Link
           href="/user/appointment"
           className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 shadow"
@@ -72,6 +73,17 @@ export default function MyAppointmentsPage() {
       </div>
 
       <div className="p-6 max-w-xl mx-auto">
+        {/* In-flow button for small screens (appears above the H1) */}
+        <div className="show-on-small" style={{ display: 'none' }}>
+          <Link
+            href="/user/appointment"
+            className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 shadow"
+            aria-label="Go to Book Appointment"
+          >
+            Book Appointment
+          </Link>
+        </div>
+
         <h1 className={`text-2xl font-bold mb-4 ${isDarkMode? null : "text-gray-900"}`}>My Appointments</h1>
         <p className={`mb-4 ${isDarkMode? null : "text-gray-900"}`}>
           View all of your service upcoming appointments.
@@ -153,6 +165,16 @@ export default function MyAppointmentsPage() {
           ))
         )}
       </div>
+      <style jsx>{`
+        @media (max-width: 999px) {
+          .hide-on-small { display: none !important; }
+          .show-on-small { display: block !important; margin-bottom: 0.5rem; }
+        }
+        @media (min-width: 1000px) {
+          .hide-on-small { display: block !important; }
+          .show-on-small { display: none !important; }
+        }
+      `}</style>
     </div>
   );
 }

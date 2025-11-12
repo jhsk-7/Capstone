@@ -103,11 +103,21 @@ export default function BikeDetailPage() {
   return (
     <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
     <div className="p-6 max-w-xl mx-auto">
-      {/* Left-side fixed back button */}
-      <div className="fixed left-4 top-24 z-40">
+      {/* Left-side fixed back button for wide screens; on small screens an in-flow link appears above the H1 */}
+      <div className="fixed left-4 top-24 z-40 hide-on-small">
         <Link
           href="/user/myBikes"
           className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 shadow"
+        >
+          Back to My Bikes
+        </Link>
+      </div>
+
+      {/* In-flow link shown on small screens (appears above the H1) */}
+      <div className="show-on-small" style={{ display: 'none' }}>
+        <Link
+          href="/user/myBikes"
+          className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 shadow mb-4"
         >
           Back to My Bikes
         </Link>
@@ -183,6 +193,17 @@ export default function BikeDetailPage() {
         </div>
       )}
     </div>
+    {/* Responsive CSS: show in-flow link under 1000px and hide the fixed one */}
+    <style jsx>{`
+      @media (max-width: 999px) {
+        .hide-on-small { display: none !important; }
+        .show-on-small { display: block !important; }
+      }
+      @media (min-width: 1000px) {
+        .hide-on-small { display: block !important; }
+        .show-on-small { display: none !important; }
+      }
+    `}</style>
     </div>
   );
 }

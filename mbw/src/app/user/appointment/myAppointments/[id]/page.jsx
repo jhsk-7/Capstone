@@ -128,7 +128,19 @@ export default function AppointmentDetailPage() {
   return (
   <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? "" : "bg-white"}`}>
     <div className="p-6 max-w-xl mx-auto">
-      <div className="fixed left-4 top-24 z-40">
+      {/* Two links: one fixed for large viewports, one in-flow for small viewports.
+          CSS below toggles visibility at 1000px. */}
+      <div className="fixed left-4 top-24 z-40 hide-on-small">
+        <Link
+          href="/user/appointment/myAppointments"
+          className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 shadow"
+          aria-label="Go to My Appointments"
+        >
+          Back to My Appointments
+        </Link>
+      </div>
+
+      <div className="show-on-small" style={{ display: 'none' }}>
         <Link
           href="/user/appointment/myAppointments"
           className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 shadow"
@@ -192,6 +204,17 @@ export default function AppointmentDetailPage() {
         </div>
       </div>
     </div>
+    {/* Responsive CSS: show in-flow link under 1000px and hide the fixed one */}
+    <style jsx>{`
+      @media (max-width: 999px) {
+        .hide-on-small { display: none !important; }
+        .show-on-small { display: block !important; margin-bottom: 0.5rem; }
+      }
+      @media (min-width: 1000px) {
+        .hide-on-small { display: block !important; }
+        .show-on-small { display: none !important; }
+      }
+    `}</style>
   </div>
 );
 }
