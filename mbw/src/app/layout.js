@@ -5,7 +5,7 @@ import { AppProvider } from "./appContext";
 
 
 export const metadata = {
-  title: "Clean Bike Express",
+  title: "Easy Bike Service",
   description: "Premier mobile bike cleaning",
 };
 

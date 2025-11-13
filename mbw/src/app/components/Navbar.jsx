@@ -10,6 +10,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { isLoggedIn, isAdminLoggedIn, setIsLoggedIn, setIsAdminLoggedIn, isDarkMode, setIsDarkMode, navContext } = useAppContext();
+  const [username, setUsername] = useState("");
   
 
   let navItems = []
@@ -76,6 +77,29 @@ export default function Navbar() {
     document.documentElement.classList.toggle("dark", enableDark);
   }, [setIsDarkMode]);
 
+  // fetch username when logged in
+  useEffect(() => {
+    let mounted = true;
+    const fetchUsername = async () => {
+      try {
+        if (!isLoggedIn) {
+          setUsername("");
+          return;
+        }
+        const res = await axios.get("/api/users/userAuth/validUser", { withCredentials: true });
+        const u = res?.data?.data?.username || "";
+        if (mounted) setUsername(u);
+      } catch (err) {
+        // ignore - username optional
+        if (mounted) setUsername("");
+      }
+    };
+    fetchUsername();
+    return () => { mounted = false; };
+  }, [isLoggedIn]);
+
+  const capitalize = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
+
 
   const toggleDark = () => {
     const next = !isDarkMode;
@@ -111,7 +135,13 @@ export default function Navbar() {
   <nav className={`shadow-md ${isDarkMode ? "bg-blue-600 text-white" : "bg-gray-300 text-gray-900"}`}>
       <div className="max-w-6xl mx-auto px-4">
         <div className="relative flex justify-between items-center h-16">
-          <div className="text-xl font-bold">BikeShop</div>
+          <div className="text-xl font-bold">Time to Clean Up</div>
+          {/* Center greeting when user is logged in */}
+          {isLoggedIn && (
+            <div className="absolute left-1/2 transform -translate-x-1/2 text-2xl italic">
+              {username ? `"Hello ${capitalize(username)}!"` : "Hello!"}
+            </div>
+          )}
 
           <div className="flex items-center space-x-6">
             {navItems.map((item) => (
