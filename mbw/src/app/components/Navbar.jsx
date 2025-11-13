@@ -132,16 +132,17 @@ export default function Navbar() {
   };
 
   return (
-  <nav className={`shadow-md ${isDarkMode ? "bg-blue-600 text-white" : "bg-gray-300 text-gray-900"}`}>
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="relative flex justify-between items-center h-16">
-          <div className="text-xl font-bold">Time to Clean Up</div>
-          {/* Center greeting when user is logged in */}
-          {isLoggedIn && (
-            <div className="absolute left-1/2 transform -translate-x-1/2 text-2xl italic">
-              {username ? `"Hello ${capitalize(username)}!"` : "Hello!"}
-            </div>
-          )}
+    <>
+      <nav className={`shadow-md ${isDarkMode ? "bg-blue-600 text-white" : "bg-gray-300 text-gray-900"}`}>
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="relative flex justify-between items-center h-16">
+            <div className="text-xl font-bold hide-on-small">Time to Clean Up</div>
+            {/* Center greeting when user is logged in */}
+            {isLoggedIn && (
+              <div className="absolute left-1/2 transform -translate-x-1/2 text-2xl italic hide-on-small">
+                {username ? `Hello ${capitalize(username)}!` : "Hello!"}
+              </div>
+            )}
 
           <div className="flex items-center space-x-6">
             {navItems.map((item) => (
@@ -216,6 +217,16 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-    </nav>
+      </nav>
+
+      <style jsx>{`
+        .hide-on-small { display: block; }
+
+        /* hide the title + greeting on viewports less than 1000px */
+        @media (max-width: 999px) {
+          .hide-on-small { display: none !important; }
+        }
+      `}</style>
+    </>
   );
 }
