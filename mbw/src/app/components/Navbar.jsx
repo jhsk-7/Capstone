@@ -144,21 +144,22 @@ export default function Navbar() {
               </div>
             )}
 
-          <div className="flex items-center space-x-6">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`${isDarkMode ? "hover:bg-blue-700" : "hover:bg-gray-200"} ${
-                  pathname === item.href ? "underline font-semibold" : ""
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+          <div className="flex-1 flex justify-end">
+            <div className="flex items-center space-x-6">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`${isDarkMode ? "hover:bg-blue-700" : "hover:bg-gray-200"} ${
+                    pathname === item.href ? "underline font-semibold" : ""
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
 
-            {/* Settings button + dropdown (right side) */}
-            <div className="relative">
+              {/* Settings button + dropdown (right side) */}
+              <div className="relative">
               <button
                 ref={btnRef}
                 onClick={() => setOpen((o) => !o)}
@@ -217,6 +218,7 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+    </div>
       </nav>
 
       <style jsx>{`
