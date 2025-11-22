@@ -27,15 +27,14 @@ export default function AdminSignup() {
     try {
       setErrMsg("");
       setLoading(true);
-      const res = await axios.post("/api/admin/amdinAuth/signup", user, { withCredentials: true });
+      const res = await axios.post("/api/admin/adminAuth/signup", user, { withCredentials: true });
       router.push("/admin/auth/login");
     } catch (error) {
-/*      const findStatus = async () => {
+      const findStatus = async () => {
         const { status, message} = normalizeError(error);
         setErrMsg(message);
       };
       await findStatus();
-*/
       console.log(error)
     } finally {
       setLoading(false);
