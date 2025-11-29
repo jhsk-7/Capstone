@@ -1,25 +1,61 @@
-# Capstone
-Mobile Bike Cleaning Service Application
+easybikeservice.com is a full-stack bike service scheduling platform where users can register bikes, book appointments, and manage service status in real time.
 
-# Capstone
-Mobile Bike Cleaning Service Application
+URL: https://easybikeservice.com
+Status: LIVE 
 
-In terminal:
-Go into project folder.
-Run npm run dev.
+User Features:
+- Create account, login/logout
+- Add and delete bikes
+- Book service appointments
+- View appointment details & history
+- Light/Dark mode
+- Upload bike images
 
-In web browser:
+Admin Features:
+- Manage services
+- Approve/decline appointments
+- Update service status
 
-For "clients":
-Go to "http://localhost:3000/signup" to create an account.
-Go to "http://localhost:3000/login" to access your account.
-Go to "http://localhost:3000/addBike" to add bikes to your account.
-Go to "http://localhost:3000/myBikes" to view your bikes.
-Go to "http://localhost:3000/appointment" to add an appointment.
-Go to "http://localhost:3000/appointment/myAppointments" to view your appointments.
+Tech Stack:
+- Frontend: Next.js (App Router), React, Tailwind
+- Backend: Node.js, Mongoose, Next.js API Routes
+- Database: MongoDB
+- Auth: JWT + HttpOnly cookies
+- Testing: Jest + React Testing Library
+- Deployment: Render 
 
-For "admins":
-Go to "http://localhost:3000/admin/signup" to create an admin account. Use ADMIN_SIGNUP_CODE for a secret admin signup key.
-Go to "http://localhost:3000/admin/login" to access admin account.
-Go to "http://localhost:3000/admin/services" to create services.
+Endpoints:
+- Home - https://www.easybikeservice.com/
+- User login - /user/auth/login
+- User signup - /user/auth/signup
+- View user bikes - /user/myBikes
+- View user bike - /user/myBikes/[id]
+- Add user bike - /user/addBike
+- View user appointments - /user/appointment/myAppointments
+- View user appointment - /user/appointment/myAppointments/[id]
+- Book user appointment - /user/appointment
+- Admin login - /admin/auth/login
+- Admin signup - /admin/auth/signup
+- Admin manage services - /admin/services
+- Admin view appointments - /admin/appointments
+- Admin manage appointments - /admin/appointments/[id]
+
+Clone the repo:
+- git clone https://github.com/jhsk-7/Capstone.git
+
+Install dependencies:
+- npm install
+
+Enviroment variables:
+- MONGO_URL=
+- TOKEN_SECRET=
+- DOMAIN=
+- ADMIN_SIGNUP_CODE=
+
+Run the app:
+- npm run dev
+
+Run all tests:
+- npm run test
+- npm test -- --coverage
 
