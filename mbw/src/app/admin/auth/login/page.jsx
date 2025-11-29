@@ -1,0 +1,115 @@
+"use client";
+
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { normalizeError } from "@/helpers/newErrorHandler";
+import { useAppContext } from "@/app/appContext";
+
+export default function AdminLogin() {
+  const router = useRouter();
+
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+  });
+  const { setNavContext, setIsAdminLoggedIn, isDarkMode } = useAppContext(); 
+  const [errMsg, setErrMsg] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+  const isDisabled = loading || !user.email || !user.password;
+
+  useEffect(() => {
+    setNavContext('adminLogin');
+  }, []);
+
+  useEffect(() => {
+    setButtonDisabled(!(user.email && user.password));
+  }, [user]);
+
+  const onLogin = async (e) => {
+    e?.preventDefault();
+    if (isDisabled) return;
+    try {
+      setLoading(true);
+      const res = await axios.post("/api/admin/adminAuth/login", user, {
+        withCredentials: true,
+      });
+      setIsAdminLoggedIn(true)
+      alert(res.data.message);
+      router.push("/admin/services"); 
+    } catch (err) {
+      console.log(err)
+      const findStatus = async () => {
+        const { message } = normalizeError(err);
+        setErrMsg(message);
+      };
+      await findStatus();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+return (
+  <div className={`min-h-[calc(100vh-4rem)] p-6 ${isDarkMode ? null : "bg-white"}`}>
+  <div className="p-6 max-w-xl mx-auto">
+    <h1 className={`text-2xl font-bold mb-4 ${isDarkMode? null : "text-gray-900"}`}>Admin Log in</h1>
+
+    {errMsg && (
+      <div className="mb-4 p-4 border border-red-300 bg-red-50 rounded text-red-700">
+        {errMsg}
+      </div>
+    )}
+
+    <form onSubmit={onLogin} className="space-y-4">
+      <div>
+        <label htmlFor="email" className={`block mb-2 ${isDarkMode ? null : "text-gray-900"}`}>
+          Email
+        </label>
+        <input
+          id="email"
+          value={user.email}
+          onChange={(e) => setUser((u) => ({ ...u, email: e.target.value }))}
+          placeholder="you@example.com"
+          className={`border p-2 w-full rounded placeholder:text-shadow-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDarkMode ? null : "text-gray-900"}`}
+        />
+      </div>
+
+      <div>
+        <label htmlFor="password" className={`block mb-2 ${isDarkMode ? null : "text-gray-900"}`}>
+          Password
+        </label>
+        <input
+          id="password"
+          type="password"
+          value={user.password}
+          onChange={(e) => setUser((u) => ({ ...u, password: e.target.value }))}
+          placeholder="••••••••"
+          className={`border p-2 w-full rounded placeholder:text-shadow-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDarkMode ? null : "text-gray-900"}`}
+          required
+          autoComplete="current-password"
+        />
+      </div>
+
+      <button
+        type="submit"
+        disabled={isDisabled}
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {loading ? "Signing in…" : "Login"}
+      </button>
+    </form>
+
+    <div className={`mt-4 ${isDarkMode ? null : "text-gray-900"}`}>
+      <span className="mr-2">Don’t have an account?</span>
+      <Link href="/admin/auth/signup" className="text-blue-600 hover:underline">
+        Sign up
+      </Link>
+    </div>
+
+  </div>
+  </div>
+);
+}
