@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { normalizeError} from "@/helpers/newErrorHandler";
 import { useAppContext } from "@/app/appContext";
-import { set } from "mongoose";
 
 
 export default function SignupPage() {

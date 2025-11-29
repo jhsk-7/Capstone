@@ -1,5 +1,4 @@
-// src/app/admin/auth/signup/__tests__/signup.test.js
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import AdminSignup from '@/app/admin/auth/signup/page';
 import axios from 'axios';
 
@@ -8,6 +7,10 @@ jest.mock('axios');
 
 // capture the router push to assert navigation
 const pushMock = jest.fn();
+
+// allow toggling dark mode per test
+let mockIsDarkMode = false;
+
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: pushMock }),
 }));
@@ -16,9 +19,24 @@ jest.mock('next/navigation', () => ({
 jest.mock('@/app/appContext', () => ({
   useAppContext: () => ({
     setNavContext: jest.fn(),
-    isDarkMode: false,
+    isDarkMode: mockIsDarkMode,
   }),
 }));
+
+// mock normalizeError so we can check error branch
+const normalizeErrorMock = jest.fn(() => ({
+  status: 400,
+  message: 'Signup failed',
+}));
+jest.mock('@/helpers/newErrorHandler', () => ({
+  normalizeError: (...args) => normalizeErrorMock(...args),
+}));
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockIsDarkMode = false;
+});
+
 
 test('renders sign up page and has disabled submit initially', () => {
   render(<AdminSignup />);
@@ -68,4 +86,17 @@ test('successful signup navigates to /admin/auth/login', async () => {
   // Wait for navigation after axios resolves
   await screen.findByRole('button', { name: /sign up/i }); // ensures re-render happened
   expect(pushMock).toHaveBeenCalledWith('/admin/auth/login');
+});
+
+
+test('renders correctly in dark mode (isDarkMode=true)', () => {
+  mockIsDarkMode = true;
+
+  render(<AdminSignup />);
+
+  // Still renders the heading; main purpose is to execute ternaries with isDarkMode = true
+  expect(screen.getByRole('heading', { name: /sign up/i })).toBeInTheDocument();
+
+  // Button is still disabled initially in dark mode
+  expect(screen.getByRole('button', { name: /sign up/i })).toBeDisabled();
 });

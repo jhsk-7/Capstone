@@ -5,7 +5,6 @@ import Appointment from "@/models/appointmentModel";
 import "@/models/userModel";
 import "@/models/bikeModel";   
 import "@/models/serviceModel"; 
-import { getDataFromToken } from "@/helpers/userAuth";
 import mongoose from "mongoose";
 
 export const runtime = "nodejs";

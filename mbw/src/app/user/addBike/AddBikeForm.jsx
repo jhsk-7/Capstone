@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { normalizeError} from "@/helpers/newErrorHandler";

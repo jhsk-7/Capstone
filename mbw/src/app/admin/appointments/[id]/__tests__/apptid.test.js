@@ -252,3 +252,182 @@ describe('Appointment date rendering', () => {
     expect(await screen.findByText(expectedDate)).toBeInTheDocument();
   });
 });
+
+test('shows "Appointment not found." when API returns null appointment', async () => {
+  axios.get.mockResolvedValueOnce({
+    data: {
+      data: null, // triggers the `if (!appt)` branch
+    },
+  });
+
+  render(<AppointmentDetailPage />);
+
+  expect(
+    await screen.findByText(/appointment not found\./i)
+  ).toBeInTheDocument();
+
+  // Back link is still available in this branch
+  expect(
+    screen.getByRole('link', { name: /back to all appointments/i })
+  ).toBeInTheDocument();
+});
+
+test('falls back to "Pending" when appointment has no status', async () => {
+  axios.get.mockResolvedValueOnce({
+    data: {
+      data: {
+        date: '2025-09-30T00:00:00.000Z',
+        // status intentionally omitted
+        bikes: [],
+        createdAt: null,
+        updatedAt: null,
+      },
+    },
+  });
+
+  render(<AppointmentDetailPage />);
+
+  // The pill should show "Pending" from `{appt.status || "Pending"}`
+  const pill = await screen.findByText(/pending/i);
+  expect(pill).toBeInTheDocument();
+});
+
+test('uses "—" nickname fallback and ignores non-array services', async () => {
+  axios.get.mockResolvedValueOnce({
+    data: {
+      data: {
+        date: '2025-09-30T00:00:00.000Z',
+        status: 'Pending',
+        bikes: [
+          {
+            bikeId: { _id: 'b1' }, // no nickname -> nickname branch fallback
+            services: 'not-an-array', // Array.isArray === false -> empty services string
+          },
+        ],
+        createdAt: null,
+        updatedAt: null,
+      },
+    },
+  });
+
+  render(<AppointmentDetailPage />);
+
+  // row like: "Bike: — - Services:"
+  const bikeLabel = await screen.findByText('Bike:', { selector: 'span' });
+  const row = bikeLabel.closest('div');
+
+  expect(row).toHaveTextContent(/Bike:\s*—\s*-\s*Services:/i);
+  // make sure the raw non-array value was not rendered
+  expect(row).not.toHaveTextContent(/not-an-array/i);
+});
+
+test('filters out services entries without a name and only shows named ones', async () => {
+  axios.get.mockResolvedValueOnce({
+    data: {
+      data: {
+        date: '2025-09-30T00:00:00.000Z',
+        status: 'Pending',
+        bikes: [
+          {
+            bikeId: { _id: 'b1', nickname: 'Roadster' },
+            services: [
+              { name: 'Wash' },     // kept
+              { _id: 's2' },        // no name -> mapped to null, then filtered
+              'random-string',      // typeof !== "object" -> null -> filtered
+            ],
+          },
+        ],
+        createdAt: null,
+        updatedAt: null,
+      },
+    },
+  });
+
+  render(<AppointmentDetailPage />);
+
+  const bikeLabel = await screen.findByText('Bike:', { selector: 'span' });
+  const row = bikeLabel.closest('div');
+
+  // Only the named service should appear
+  expect(row).toHaveTextContent(/Services:\s*Wash/i);
+  expect(row).not.toHaveTextContent(/s2/i);
+  expect(row).not.toHaveTextContent(/random-string/i);
+});
+
+test('falls back to raw string when updatedAt is not a valid date', async () => {
+  axios.get.mockResolvedValueOnce({
+    data: {
+      data: {
+        date: '2025-09-30T00:00:00.000Z',
+        status: 'Pending',
+        bikes: [],
+        createdAt: '2025-09-01T00:00:00.000Z',
+        updatedAt: 'not-a-valid-date', // triggers Number.isNaN branch in formatDate
+      },
+    },
+  });
+
+  render(<AppointmentDetailPage />);
+
+  // We don't care about the exact Created date formatting here,
+  // just that it's rendered at all.
+  expect(await screen.findByText(/created:/i)).toBeInTheDocument();
+
+  // Updated date should show the raw string
+  expect(
+    screen.getByText(/updated:\s*not-a-valid-date/i)
+  ).toBeInTheDocument();
+});
+
+test('shows error message if status update PATCH fails', async () => {
+  axios.get.mockResolvedValueOnce({
+    data: {
+      data: {
+        date: '2025-09-30T00:00:00.000Z',
+        status: 'Pending',
+        bikes: [],
+        createdAt: '2025-09-01T00:00:00.000Z',
+        updatedAt: '2025-09-10T00:00:00.000Z',
+      },
+    },
+  });
+
+  // This exercises the catch block inside handleStatusUpdate
+  axios.patch.mockRejectedValueOnce(new Error('update failed'));
+
+  render(<AppointmentDetailPage />);
+
+  // 1) Wait for the normal detail view to load
+  expect(await screen.findByText(/pending/i)).toBeInTheDocument();
+
+  // 2) Click the "Completed" button
+  const completedBtn = screen.getByRole('button', { name: /completed/i });
+  expect(completedBtn).toBeEnabled();
+
+  fireEvent.click(completedBtn);
+
+  // 3) PATCH should have been called with the correct args
+  await waitFor(() => {
+    expect(axios.patch).toHaveBeenCalledWith(
+      '/api/admin/appointments/abc123',
+      { status: 'Completed' },
+      { withCredentials: true }
+    );
+  });
+
+  // 4) Component switches into the error view using normalizeError message
+  expect(
+    await screen.findByText(/failed to load appointment/i)
+  ).toBeInTheDocument();
+
+  // Optional: verify we’re in the error UI and buttons are gone
+  expect(
+    screen.queryByRole('button', { name: /completed/i })
+  ).toBeNull();
+  expect(
+    screen.queryByRole('button', { name: /confirmed/i })
+  ).toBeNull();
+  expect(
+    screen.queryByRole('button', { name: /cancelled/i })
+  ).toBeNull();
+});

@@ -1,7 +1,7 @@
 import { connectToDB } from "@/dbConfig/db";
 import User from "@/models/userModel"
 import { NextResponse} from "next/server";
-import bcryptjs, { hash } from "bcryptjs";
+import bcryptjs from "bcryptjs";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

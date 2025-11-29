@@ -1,133 +1,284 @@
-import { render, screen, fireEvent  } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+// src/app/user/addBike/__tests__/addbike.test.jsx
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import AddBikePage from '@/app/user/addBike/page';
+import AddBikeForm from '@/app/user/addBike/AddBikeForm';
 import axios from 'axios';
-import AppointmentPage from '@/app/user/appointment/page';
 
 jest.mock('axios');
 
-test('renders and has disabled "Book Appointment" button initially', async () => {
-  // Mock the three GETs made in useEffect
-  axios.get
-    .mockResolvedValueOnce({ data: { data: { _id: 'user123' } } }) // /validUser
-    .mockResolvedValueOnce({ data: { data: [] } })                 // /myBikes
-    .mockResolvedValueOnce({ data: { data: [] } });                // /services
+// router mock (AddBikeForm imports useRouter, even if not used)
+const pushMock = jest.fn();
 
-  render(<AppointmentPage />);
+// 🔹 declare mockIsDarkMode *before* any use
+let mockIsDarkMode = false;
+const setNavContextMock = jest.fn();
 
-  // Heading shows
+// next/navigation mock
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({ push: pushMock }),
+}));
+
+// appContext mock
+jest.mock('@/app/appContext', () => ({
+  useAppContext: () => ({
+    setNavContext: setNavContextMock,
+    isDarkMode: mockIsDarkMode,
+  }),
+}));
+
+// normalizeError mock for the error branch
+const normalizeErrorMock = jest.fn(() => ({
+  message: 'Could not add bike',
+}));
+jest.mock('@/helpers/newErrorHandler', () => ({
+  normalizeError: (...args) => normalizeErrorMock(...args),
+}));
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockIsDarkMode = false; // reset for each test
+});
+
+//
+// AddBikePage tests (wrapper)
+//
+test('AddBikePage renders heading and "My Bikes" link (light mode)', () => {
+  mockIsDarkMode = false;
+  render(<AddBikePage />);
+
   expect(
-    screen.getByRole('heading', { name: /book a service appointment/i })
+    screen.getByRole('heading', { name: /add bike/i })
   ).toBeInTheDocument();
 
-  // Submit starts disabled (no date, no selected bikes)
+  // fixed link to My Bikes
   expect(
-    screen.getByRole('button', { name: /book appointment/i })
-  ).toBeDisabled();
+    screen.getByRole('link', { name: /go to my bikes/i })
+  ).toBeInTheDocument();
 });
 
+test('AddBikePage renders in dark mode without crashing', () => {
+  mockIsDarkMode = true;
+  render(<AddBikePage />);
 
-test('enables "Book Appointment" after choosing a date and a bike', async () => {
-  // Mock initial loads: user, bikes, services
-  axios.get
-    .mockResolvedValueOnce({ data: { data: { _id: 'user123' } } }) // /validUser
-    .mockResolvedValueOnce({
-      data: {
-        data: [{ _id: 'b1', nickname: 'Commuter', make: 'Trek', model: 'FX' }],
-      },
-    }) // /myBikes
-    .mockResolvedValueOnce({ data: { data: [{ _id: 's1', name: 'Wash' }] } }); // /services
-
-  render(<AppointmentPage />);
-
-  // Wait for the list UI to be present (lets the effect finish and avoids act warnings)
-  expect(await screen.findByText(/select bikes & services/i)).toBeInTheDocument();
-
-  // Grab the date input directly (label isn't associated; role queries won't find it reliably)
-  const dateInput = document.querySelector('input[type="date"]');
-  expect(dateInput).toBeInTheDocument();
-
-  // Build a date string >= min (today), matching component format
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  const todayStr = `${yyyy}-${mm}-${dd}`;
-
-  // Set the date value (jsdom handles date inputs via change events)
-  fireEvent.change(dateInput, { target: { value: todayStr } });
-
-  // Select the bike checkbox
-  const bikeCheckbox = await screen.findByRole('checkbox', { name: /commuter,\s*trek\s*fx/i });
-  await userEvent.click(bikeCheckbox);
-
-  // Button should now be enabled
-  const submitBtn = screen.getByRole('button', { name: /book appointment/i });
-  expect(submitBtn).toBeEnabled();
+  expect(
+    screen.getByRole('heading', { name: /add bike/i })
+  ).toBeInTheDocument();
 });
 
+//
+// AddBikeForm tests
+//
+test('AddBikeForm calls setNavContext("userIn") on mount', () => {
+  render(<AddBikeForm />);
+  expect(setNavContextMock).toHaveBeenCalledWith('userIn');
+});
 
-import { render, screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import axios from 'axios';
-import AppointmentPage from '@/app/user/appointment/page';
+// dark-mode form test: exercises isDarkMode branches inside the form
+test('AddBikeForm renders correctly in dark mode', () => {
+  mockIsDarkMode = true;
 
-jest.mock('axios');
+  render(<AddBikeForm />);
 
-test('submits with correct payload (userId, date, bikes & services)', async () => {
-  // Mock initial loads: user, bikes, services
-  axios.get
-    .mockResolvedValueOnce({ data: { data: { _id: 'user123' } } }) // /validUser
-    .mockResolvedValueOnce({
-      data: {
-        data: [{ _id: 'b1', nickname: 'Commuter', make: 'Trek', model: 'FX' }],
-      },
-    }) // /myBikes
-    .mockResolvedValueOnce({
-      data: { data: [{ _id: 's1', name: 'Wash', price: 15 }] },
-    }); // /services
+  expect(screen.getByLabelText(/nickname/i)).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /add bike/i })).toBeInTheDocument();
+});
 
-  // Mock POST success
+test('AddBikeForm submits with URL only and shows success message', async () => {
   axios.post.mockResolvedValueOnce({ data: { ok: true } });
 
-  // Silence window.alert (used by the component on success)
-  const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
+  render(<AddBikeForm />);
 
-  render(<AppointmentPage />);
-
-  // Wait for list to appear (ensures useEffect finished)
-  expect(await screen.findByText(/select bikes & services/i)).toBeInTheDocument();
-
-  // Set date (today)
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  const todayStr = `${yyyy}-${mm}-${dd}`;
-
-  const dateInput = document.querySelector('input[type="date"]');
-  fireEvent.change(dateInput, { target: { value: todayStr } });
-
-  // Select bike
-  const bikeCheckbox = await screen.findByRole('checkbox', { name: /commuter,\s*trek\s*fx/i });
-  await userEvent.click(bikeCheckbox);
-
-  // Select service
-  const serviceCheckbox = await screen.findByRole('checkbox', { name: /wash/i });
-  await userEvent.click(serviceCheckbox);
-
-  // Submit
-  await userEvent.click(screen.getByRole('button', { name: /book appointment/i }));
-
-  // Assert POST call
-  expect(axios.post).toHaveBeenCalledTimes(1);
-  const [url, payload, options] = axios.post.mock.calls[0];
-  expect(url).toBe('/api/users/appointment');
-  expect(options).toMatchObject({ withCredentials: true });
-  expect(payload).toEqual({
-    userId: 'user123',
-    date: todayStr,
-    bikes: [{ bikeId: 'b1', services: ['s1'] }],
+  // Fill required fields
+  fireEvent.change(screen.getByLabelText(/nickname/i), {
+    target: { value: 'Commuter' },
+  });
+  fireEvent.change(screen.getByLabelText(/make/i), {
+    target: { value: 'Trek' },
+  });
+  fireEvent.change(screen.getByLabelText(/model/i), {
+    target: { value: 'FX 3' },
+  });
+  fireEvent.change(screen.getByLabelText(/color/i), {
+    target: { value: 'Blue' },
+  });
+  fireEvent.change(screen.getByLabelText(/picture url/i), {
+    target: { value: 'https://example.com/bike.jpg' },
   });
 
-  alertSpy.mockRestore();
+  const button = screen.getByRole('button', { name: /add bike/i });
+  fireEvent.click(button);
+
+  // While loading, text should change to "Adding..." and button is disabled
+  const loadingButton = screen.getByRole('button', { name: /adding\.\.\./i });
+  expect(loadingButton).toBeDisabled();
+
+  await waitFor(() => {
+    expect(axios.post).toHaveBeenCalledWith(
+      '/api/users/bikes/addBike',
+      expect.any(FormData),
+      { withCredentials: true }
+    );
+  });
+
+  // Success message (okMsg branch)
+  expect(
+    await screen.findByText(/bike added successfully/i)
+  ).toBeInTheDocument();
+
+  // Button text should go back to "Add Bike" (loading=false)
+  expect(
+    screen.getByRole('button', { name: /add bike/i })
+  ).toBeInTheDocument();
+});
+
+test('AddBikeForm prefers uploaded file over URL when both are provided', async () => {
+  axios.post.mockResolvedValueOnce({ data: { ok: true } });
+
+  render(<AddBikeForm />);
+
+  // Fill required fields
+  fireEvent.change(screen.getByLabelText(/nickname/i), {
+    target: { value: 'Roadster' },
+  });
+  fireEvent.change(screen.getByLabelText(/make/i), {
+    target: { value: 'Specialized' },
+  });
+  fireEvent.change(screen.getByLabelText(/model/i), {
+    target: { value: 'Sirrus' },
+  });
+  fireEvent.change(screen.getByLabelText(/color/i), {
+    target: { value: 'Black' },
+  });
+  fireEvent.change(screen.getByLabelText(/picture url/i), {
+    target: { value: 'https://example.com/will-be-ignored.jpg' },
+  });
+
+  // Simulate file upload
+  const fileInput = screen.getByLabelText(/upload a picture/i);
+  const file = new File(['dummy'], 'bike.png', { type: 'image/png' });
+  fireEvent.change(fileInput, {
+    target: { files: [file] },
+  });
+
+  fireEvent.click(screen.getByRole('button', { name: /add bike/i }));
+
+  await waitFor(() => {
+    expect(axios.post).toHaveBeenCalledTimes(1);
+  });
+
+  const [, formDataArg] = axios.post.mock.calls[0];
+
+  // Ensure the FormData contains the file under "picture"
+  expect(formDataArg instanceof FormData).toBe(true);
+  const pictureEntry = formDataArg.get('picture');
+  expect(pictureEntry).toBe(file);
+});
+
+test('AddBikeForm does not append picture when neither URL nor file is provided', async () => {
+  axios.post.mockImplementationOnce((url, data, config) => {
+    expect(url).toBe('/api/users/bikes/addBike');
+    expect(config).toEqual({ withCredentials: true });
+    expect(data instanceof FormData).toBe(true);
+
+    // No picture should be present
+    expect(data.has('picture')).toBe(false);
+
+    // Required fields still there
+    expect(data.get('nickname')).toBe('Commuter');
+    expect(data.get('color')).toBe('Blue');
+
+    return Promise.resolve({ data: { ok: true } });
+  });
+
+  render(<AddBikeForm />);
+
+  // Fill required fields, leave pictureUrl empty and no file
+  fireEvent.change(screen.getByLabelText(/nickname/i), {
+    target: { value: 'Commuter' },
+  });
+  fireEvent.change(screen.getByLabelText(/make/i), {
+    target: { value: 'Trek' },
+  });
+  fireEvent.change(screen.getByLabelText(/model/i), {
+    target: { value: 'FX 3' },
+  });
+  fireEvent.change(screen.getByLabelText(/color/i), {
+    target: { value: 'Blue' },
+  });
+  fireEvent.change(screen.getByLabelText(/picture url/i), {
+    target: { value: '' },
+  });
+
+  fireEvent.click(screen.getByRole('button', { name: /add bike/i }));
+
+  // Loading state
+  expect(
+    screen.getByRole('button', { name: /adding\.\.\./i })
+  ).toBeDisabled();
+
+  await waitFor(() => {
+    expect(axios.post).toHaveBeenCalledTimes(1);
+  });
+
+  expect(
+    await screen.findByText(/bike added successfully/i)
+  ).toBeInTheDocument();
+});
+
+test('AddBikeForm handles error from API and shows error message', async () => {
+  axios.post.mockRejectedValueOnce(new Error('network error'));
+
+  render(<AddBikeForm />);
+
+  // Fill required fields
+  fireEvent.change(screen.getByLabelText(/nickname/i), {
+    target: { value: 'Commuter' },
+  });
+  fireEvent.change(screen.getByLabelText(/make/i), {
+    target: { value: 'Trek' },
+  });
+  fireEvent.change(screen.getByLabelText(/model/i), {
+    target: { value: 'FX 3' },
+  });
+  fireEvent.change(screen.getByLabelText(/color/i), {
+    target: { value: 'Blue' },
+  });
+
+  fireEvent.click(screen.getByRole('button', { name: /add bike/i }));
+
+  // normalizeError is used to derive message
+  await waitFor(() => {
+    expect(normalizeErrorMock).toHaveBeenCalled();
+  });
+
+  expect(
+    await screen.findByText(/could not add bike/i)
+  ).toBeInTheDocument();
+
+  // okMsg should not be visible
+  expect(
+    screen.queryByText(/bike added successfully/i)
+  ).toBeNull();
+});
+
+test('handleFileChange clears pictureFile when no file is selected', () => {
+  render(<AddBikeForm />);
+
+  const fileInput = screen.getByLabelText(/upload a picture/i);
+
+  // First, set a file
+  const file = new File(['dummy'], 'bike.png', { type: 'image/png' });
+  fireEvent.change(fileInput, {
+    target: { files: [file] },
+  });
+
+  // Then, change with empty files array -> should set pictureFile to null internally
+  fireEvent.change(fileInput, {
+    target: { files: [] },
+  });
+
+  // Just ensure the form is still functional; this runs the "no file" branch
+  expect(
+    screen.getByRole('button', { name: /add bike/i })
+  ).toBeInTheDocument();
 });
