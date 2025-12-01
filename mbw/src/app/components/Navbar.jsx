@@ -9,8 +9,8 @@ import { useAppContext } from "@/app/appContext";
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { isLoggedIn, isAdminLoggedIn, setIsLoggedIn, setIsAdminLoggedIn, isDarkMode, setIsDarkMode, navContext } = useAppContext();
-  const [username, setUsername] = useState("");
+  const { isLoggedIn, isAdminLoggedIn, setIsLoggedIn, setIsAdminLoggedIn, isDarkMode, setIsDarkMode, navContext, username, setUsername } = useAppContext();
+
   
 
   let navItems = []
@@ -76,27 +76,6 @@ export default function Navbar() {
     setIsDarkMode(enableDark); // <-- fixed typo
     document.documentElement.classList.toggle("dark", enableDark);
   }, [setIsDarkMode]);
-
-  // fetch username when logged in
-  useEffect(() => {
-    let mounted = true;
-    const fetchUsername = async () => {
-      try {
-        if (!isLoggedIn) {
-          setUsername("");
-          return;
-        }
-        const res = await axios.get("/api/users/userAuth/validUser", { withCredentials: true });
-        const u = res?.data?.data?.username || "";
-        if (mounted) setUsername(u);
-      } catch (err) {
-        // ignore - username optional
-        if (mounted) setUsername("");
-      }
-    };
-    fetchUsername();
-    return () => { mounted = false; };
-  }, [isLoggedIn]);
 
   const capitalize = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 

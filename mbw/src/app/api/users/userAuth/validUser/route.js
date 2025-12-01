@@ -20,6 +20,7 @@ export async function GET(request){
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
         return NextResponse.json({
+            authenticated: true,
             message: "User found",
             data: user
         })
